@@ -2,8 +2,7 @@ from dash import html
 from dash_spa import register_page
 
 from .common import topNavBar, footer, buttonBar
-from .dashboard import salesChart, customers, revenue, bounceRate, pageVisitsTable, teamMembers, progressTrack, totalOrdersBarChart, rankingPanel, acquisition, newTasksButton
-from .dashboard.button_bar_buttons import runButton
+from .dashboard import salesChart, customers, revenue, bounceRate, pageVisitsTable, teamMembers, progressTrack, totalOrdersBarChart, rankingPanel, acquisition, newTasksButton, runButton
 
 register_page(__name__, path="/pages/dashboard", title="Dash/Flightdeck - Dashboard")
 

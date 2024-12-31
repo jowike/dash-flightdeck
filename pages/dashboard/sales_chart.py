@@ -3,12 +3,15 @@ from dash_chartist import DashChartist
 
 data = {
     "labels": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    "series": [ [0, 10, 30, 40, 80, 60, 100] ]
+    "series": [ 
+        [0, 10, 30, 40, 80, 60, 100],
+        [1, 11, 29, 41, 79, 65, ]
+          ]
 }
 
 options = {
     'low': 0,
-    'showArea': True,
+    'showArea': False,
     'fullWidth': True,
     'axisX': {
         # On the x-axis start means top and end means bottom
@@ -47,7 +50,13 @@ def salesChart():
         html.Div([
             _chartHeader(),
             html.Div([
-                DashChartist(className='ct-chart-sales-value ct-double-octave ct-series-g', type=chartType, options=options, tooltips=True, data=data)
+                DashChartist(
+                    className='ct-chart-sales-value ct-double-octave',
+                    type=chartType,
+                    options=options,
+                    tooltips=True,
+                    data=data,
+                    )
             ], className='card-body p-2')
-        ], className='card bg-yellow-100 border-0 shadow')
+        ], className='card border-0')
     ], className='col-12 mb-4')
