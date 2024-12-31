@@ -2,7 +2,7 @@ from dash import html
 from dash_chartist import DashChartist
 
 data = {
-    "labels": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    "labels": ['July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'],
     "series": [ [1, 5, 2, 5, 4, 3],
                 [2, 3, 4, 8, 1, 2],
               ]
@@ -29,21 +29,22 @@ chartType = 'Bar'
 def _chartHeader():
     return html.Div([
         html.Div([
-            html.Div("Total orders", className='h6 fw-normal text-gray mb-2'),
-            html.H2("452", className='h3 fw-extrabold'),
+            html.Div("Global Explanation", className='h6 fw-normal text-gray mb-2'),
+            html.H2("322.657", className='h3 fw-extrabold'),
             html.Div([
+                html.Span("Since last month", className='fw-normal me-2'),
                 html.Span(className='fas fa-angle-up text-success'),
-                html.Span("18.2%", className='text-success fw-bold')
+                html.Span("0.3%", className='text-success fw-bold')
             ], className='small mt-2')
         ], className='d-block'),
         html.Div([
             html.Div([
                 html.Span(className='dot rounded-circle bg-gray-800 me-2'),
-                html.Span("July", className='fw-normal small')
+                html.Span("PCEC96", className='fw-normal small')
             ], className='d-flex align-items-center text-end mb-2'),
             html.Div([
                 html.Span(className='dot rounded-circle bg-secondary me-2'),
-                html.Span("August", className='fw-normal small')
+                html.Span("CPILFESL", className='fw-normal small')
             ], className='d-flex align-items-center text-end')
         ], className='d-block ms-auto')
     ], className='card-header d-flex flex-row align-items-center flex-0 border-bottom')

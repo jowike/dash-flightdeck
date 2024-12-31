@@ -8,11 +8,18 @@ from ..icons import ICON
 data = OrderedDict(
  [
 
-    ('Page name',['/demo/admin/index', '/demo/admin/forms', '/demo/admin/util', '/demo/admin/validation', '/demo/admin/modals']),
-    ('Page Views',['3,225', '2,987', '2,844', '2,050', '1,483']),
-    ('Page Value',['$20', '0', '294', '$147', '$19']),
-    ('Bounce rate',['42,55%', '43,24%', '32,35%', '50,87%', '26,12%']),
-    ('Bounce change',['Up', 'Down', 'Down', 'Up', 'Down']),
+    ('Release Date',['Nov 28', 'Dec 5', 'Dec 14', 'Dec 23', 'Dec 27']),
+    ('Data Series',[
+        'Real Disposable Personal Income',
+        'Consumer Price Index for All Urban Consumers: All Items in U.S. City Average',
+        'dvance Retail Sales: Retail Trade and Food Services',
+        'Merchant Wholesalers Inventories',
+        ' All Employees, Total Nonfarm'
+        ]),
+    # ('Data Series',['DSPIC96', 'CPIAUCSL', 'RSAFS', 'WHLSLRIMSA', 'PAYEMS']),
+    ('Actual',['17,684.4', '316.441', '724,609', '905,023', '159,288']),
+    ('Impact',['42,55%', '43,24%', '32,35%', '50,87%', '26,12%']),
+    ('',['Up', 'Down', 'Down', 'Up', 'Down']),
     ]
 )
 
@@ -53,7 +60,7 @@ def pageVisitsTable():
             html.Div([
                 html.Div([
                     html.Div([
-                        html.H2("Page visits", className='fs-5 fw-bold mb-0')
+                        html.H2("Local Explanation", className='fs-5 fw-bold mb-0')
                     ], className='col'),
                     html.Div([
                         dcc.Link("See all", href='#', className='btn btn-sm btn-primary')

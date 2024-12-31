@@ -27,17 +27,17 @@ chartType = 'Line'
 def _chartHeader():
     return  html.Div([
         html.Div([
-            html.Div("Sales Value", className='fs-5 fw-normal mb-2'),
-            html.H2("$10,567", className='fs-3 fw-extrabold'),
+            html.Div("Nowcast Browser", className='fs-5 fw-normal mb-2'),
+            html.H2("$15,567", className='fs-3 fw-extrabold'),
             html.Div([
-                html.Span("Yesterday", className='fw-normal me-2'),
+                html.Span("Since last month", className='fw-normal me-2'),
                 html.Span(className='fas fa-angle-up text-success'),
-                html.Span("10.57%", className='text-success fw-bold')
+                html.Span("2.57%", className='text-success fw-bold')
             ], className='small mt-2')
         ], className='d-block mb-3 mb-sm-0'),
         html.Div([
-            dcc.Link("Month", href='#', className='btn btn-secondary text-dark btn-sm me-2'),
-            dcc.Link("Week", href='#', className='btn btn-sm me-3')
+            dcc.Link("Base", href='#', className='btn btn-secondary text-dark btn-sm me-2'),
+            dcc.Link("Adjusted", href='#', className='btn btn-sm me-3')
         ], className='d-flex ms-auto')
     ], className='card-header d-sm-flex flex-row align-items-center flex-0')
 
