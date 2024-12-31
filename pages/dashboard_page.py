@@ -1,10 +1,17 @@
-from dash import html
+from dash import Input, Output, html
 from dash_spa import register_page
 
 from .common import topNavBar, footer, buttonBar
 from .dashboard import salesChart, customers, revenue, bounceRate, pageVisitsTable, teamMembers, progressTrack, totalOrdersBarChart, rankingPanel, acquisition, newTasksButton, runButton
 
+from kedro.framework.session import KedroSession
+from kedro.framework.startup import bootstrap_project
+from pathlib import Path
+import sys
+
 register_page(__name__, path="/pages/dashboard", title="Dash/Flightdeck - Dashboard")
+sys.path.append("/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/dependencies/")
+
 
 layout = html.Main([
         topNavBar(),
@@ -22,17 +29,15 @@ layout = html.Main([
             html.Div([
                 html.Div([
                     pageVisitsTable(),
-                    # teamMembers(),
-                    # progressTrack()
                 ], className='row')
             ], className='col-12 col-xl-8'),
             html.Div([
                 totalOrdersBarChart(),
-                # rankingPanel(),
                 acquisition(),
             ], className='col-12 col-xl-4')
 
         ], className='row'),
+        html.Div(id="pipeline-status", className="pipeline-status", style={"margin-top": "20px"}),
         footer()
     ], className='content')
 

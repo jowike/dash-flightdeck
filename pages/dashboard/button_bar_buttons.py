@@ -17,4 +17,9 @@ def runButton():
     return  html.Button([
         ICON.PLAY,
         html.Span("Run", className='me-2')
-    ], type='button', className='btn btn-gray-800 d-inline-flex align-items-center me-2')
+    ],
+    type='button',
+    id="run-pipeline-button",
+    n_clicks=0,
+    className='btn btn-gray-800 d-inline-flex align-items-center me-2',
+    )

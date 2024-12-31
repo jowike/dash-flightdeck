@@ -1,6 +1,12 @@
 from dash_spa import DashSPA, page_container
 from themes import VOLT
 from server import serve_app
+from callbacks.dashboard_callbacks import register_callbacks  # Import the callback registry function
+
+import subprocess
+import sys
+
+sys.path.append("/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/dependencies/")
 
 external_stylesheets = [
     "https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css",
@@ -16,9 +22,27 @@ external_scripts = [
     "https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"
     ]
 
+commands = [
+    "pip install kedro",
+    "pip install kedro-viz",
+    "pip install kedro-datasets",
+    "pip install bottleneck",
+    "pip install pmdarima",
+    "python3 /Users/ejowik001/Desktop/Github/mifs/setup.py install",
+    "pip install numpy==1.26.4",
+    "pip install -U kaleido"
+]
+
+def run_command(command):
+    try:
+        print(f"Executing: {command}")
+        subprocess.check_call(command, shell=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed: {command}\nError: {e}")
+        sys.exit(1)
+
+
 def create_dash():
-
-
     app = DashSPA( __name__,
         prevent_initial_callbacks=True,
         suppress_callback_exceptions=True,
@@ -27,14 +51,18 @@ def create_dash():
     return app
 
 
-def create_app(dash_factory) -> DashSPA:
+def create_app(dash_factory, project_root) -> DashSPA:
     app = dash_factory()
     app.layout = page_container
     app.server.config['SECRET_KEY'] = "A secret key"
+    register_callbacks(app, project_root)
     return app
 
 # python app.py
-
 if __name__ == "__main__":
-    app = create_app(create_dash)
+    # Environment setup
+    for cmd in commands:
+        run_command(cmd)
+
+    app = create_app(create_dash, project_root="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery")
     serve_app(app, debug=False, path="/pages/dashboard")

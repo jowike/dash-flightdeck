@@ -1,5 +1,5 @@
 .ct-series-a .ct-line {
-    stroke: #C1C1D2; /* # */
+    stroke: #8494FF; /* #8494FF #C1C1D2 */
     stroke-width: 2px;
 }
 
@@ -9,7 +9,7 @@
 }
 
 .ct-series-a .ct-point {
-    stroke: #C1C1D2;
+    stroke: #8494FF;
 }
 
 .ct-series-b .ct-point {

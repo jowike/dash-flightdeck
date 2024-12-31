@@ -12,7 +12,7 @@ data = OrderedDict(
     ('Data Series',[
         'Real Disposable Personal Income',
         'Consumer Price Index for All Urban Consumers: All Items in U.S. City Average',
-        'dvance Retail Sales: Retail Trade and Food Services',
+        'Advance Retail Sales: Retail Trade and Food Services',
         'Merchant Wholesalers Inventories',
         ' All Employees, Total Nonfarm'
         ]),
