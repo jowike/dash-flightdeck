@@ -13,8 +13,9 @@ external_stylesheets = [
     "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css",
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css",
     "https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css",
+    "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",  # Add this line
     VOLT,
-    ]
+]
 
 external_scripts = [
     "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js",

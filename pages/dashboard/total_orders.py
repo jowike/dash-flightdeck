@@ -33,7 +33,7 @@ def _chartHeader():
             html.H2("322.657", className='h3 fw-extrabold'),
             html.Div([
                 html.Span("Since last month", className='fw-normal me-2'),
-                html.Span(className='fas fa-angle-up text-success'),
+                html.Span(className='fas fa-angle-up text-success me-1'),
                 html.Span("0.3%", className='text-success fw-bold')
             ], className='small mt-2')
         ], className='d-block'),
