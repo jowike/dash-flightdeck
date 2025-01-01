@@ -23,23 +23,29 @@ external_scripts = [
     ]
 
 commands = [
-    "pip install kedro",
-    "pip install kedro-viz",
-    "pip install kedro-datasets",
-    "pip install bottleneck",
-    "pip install pmdarima",
-    "python3 /Users/ejowik001/Desktop/Github/mifs/setup.py install",
-    "pip install numpy==1.26.4",
-    "pip install -U kaleido"
+    # "pip install kedro",
+    # "pip install kedro-viz",
+    # "pip install kedro-datasets",
+    # "pip install bottleneck",
+    # "pip install pmdarima",
+    # "python3 /Users/ejowik001/Desktop/Github/mifs/setup.py install",
+    # "pip install numpy==1.26.4",
+    # "pip install -U kaleido"
 ]
+# Global variables to store the pipeline status and timestamp
+pipeline_status = "Not started"
+last_run_timestamp = "N/A"
 
-def run_command(command):
-    try:
-        print(f"Executing: {command}")
-        subprocess.check_call(command, shell=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Command failed: {command}\nError: {e}")
-        sys.exit(1)
+def setup(commands):
+    def run_command(command):
+        try:
+            print(f"Executing: {command}")
+            subprocess.check_call(command, shell=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed: {command}\nError: {e}")
+            sys.exit(1)
+    for cmd in commands:
+        run_command(cmd)
 
 
 def create_dash():
@@ -61,8 +67,7 @@ def create_app(dash_factory, project_root) -> DashSPA:
 # python app.py
 if __name__ == "__main__":
     # Environment setup
-    for cmd in commands:
-        run_command(cmd)
+    setup(commands)
 
     app = create_app(create_dash, project_root="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery")
     serve_app(app, debug=False, path="/pages/dashboard")
