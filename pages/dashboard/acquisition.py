@@ -30,5 +30,5 @@ def acquisition():
                 ], className='d-block')
             ], className='card-body')
         ], className='card border-0 shadow')
-    ], className='col-12 px-0')
+    ], className='col-12 mb-4')
 

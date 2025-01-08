@@ -6,11 +6,10 @@ from ..icons.hero import ICON
 
 def newTasksButton():
     return DropdownButtonAIO([
-        # dropdownLink("Add User", ICON.USER_ADD),
-        dropdownLink("Add Parameter", ICON.CUBE_TRANSPARENT),
-        dropdownLink("Upload Files", ICON.UPLOAD),
-        # dropdownLink("Preview Security", ICON.SECURITY),
-        # dropdownLink("Upgrade to Pro", ICON.FIRE.ME2_DANGER),
+        # dropdownButtonWithIcon("Upload Files", ICON.UPLOAD, id="upload-files-open"),
+        # dropdownButtonWithIcon("Advanced configuration", ICON.CUBE_TRANSPARENT, id="adv-config-open"),
+        html.Div([dropdownLink("Upload Files", ICON.UPLOAD)], id="upload-files-button", n_clicks=0, className="dropdown-button", style={"height": "fit-content"},),
+        html.Div([dropdownLink("Advanced configuration", ICON.CUBE_TRANSPARENT)], id="advanced-config-modal-open", n_clicks=0, className="dropdown-button", style={"height": "fit-content"},),
     ], "Settings", buttonColor="gray-800", buttonIcon=ICON.SETTINGS)
 
 def runButton():

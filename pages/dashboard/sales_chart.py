@@ -34,7 +34,7 @@ def _chartHeader():
             html.H2("$15,567", className='fs-3 fw-extrabold'),
             html.Div([
                 html.Span("Since last month", className='fw-normal me-2'),
-                html.Span(className='fas fa-angle-up text-success'),
+                html.Span(className='fas fa-angle-up text-success me-1'),
                 html.Span("2.57%", className='text-success fw-bold')
             ], className='small mt-2')
         ], className='d-block mb-3 mb-sm-0'),

@@ -3,9 +3,7 @@ from themes import VOLT
 from server import serve_app
 from callbacks.dashboard_callbacks import register_callbacks  # Import the callback registry function
 
-import subprocess
 import sys
-
 sys.path.append("/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/dependencies/")
 
 external_stylesheets = [
@@ -23,30 +21,9 @@ external_scripts = [
     "https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"
     ]
 
-commands = [
-    # "pip install kedro",
-    # "pip install kedro-viz",
-    # "pip install kedro-datasets",
-    # "pip install bottleneck",
-    # "pip install pmdarima",
-    # "python3 /Users/ejowik001/Desktop/Github/mifs/setup.py install",
-    # "pip install numpy==1.26.4",
-    # "pip install -U kaleido"
-]
 # Global variables to store the pipeline status and timestamp
 pipeline_status = "Not started"
 last_run_timestamp = "N/A"
-
-def setup(commands):
-    def run_command(command):
-        try:
-            print(f"Executing: {command}")
-            subprocess.check_call(command, shell=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Command failed: {command}\nError: {e}")
-            sys.exit(1)
-    for cmd in commands:
-        run_command(cmd)
 
 
 def create_dash():
@@ -67,8 +44,5 @@ def create_app(dash_factory, project_root) -> DashSPA:
 
 # python app.py
 if __name__ == "__main__":
-    # Environment setup
-    setup(commands)
-
     app = create_app(create_dash, project_root="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery")
     serve_app(app, debug=False, path="/pages/dashboard")

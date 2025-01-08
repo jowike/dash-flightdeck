@@ -15,3 +15,13 @@
 .ct-series-b .ct-point {
     stroke: #000000;
 }
+
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th .column-header--clear,
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th .column-header--delete,
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th .column-header--edit,
+
+.dropdown-button {
+    padding: 0;
+    margin: 0;
+    overflow: hidden; /* Ensure no extra space around the link */
+}

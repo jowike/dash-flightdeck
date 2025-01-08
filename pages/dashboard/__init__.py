@@ -8,3 +8,4 @@ from .global_rank import rankingPanel
 from .acquisition import acquisition
 from .button_bar_buttons import newTasksButton, runButton
 from .alerts_notifications import alertsNotifications
+from .modal import modal
