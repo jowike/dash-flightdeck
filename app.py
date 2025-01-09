@@ -25,7 +25,6 @@ external_scripts = [
 pipeline_status = "Not started"
 last_run_timestamp = "N/A"
 
-
 def create_dash():
     app = DashSPA( __name__,
         prevent_initial_callbacks=True,

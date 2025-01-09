@@ -4,36 +4,9 @@
 #           [Dash HTML/CORE Components:](https://dash.plotly.com/dash-html-components)
 import dash
 from dash import Dash, dcc, html, Input, Output, State           # pip install dash
-from dash_spa.components.dropdown_aio import DropdownAIO
 import dash_bootstrap_components as dbc         # pip install dash_bootstrap_components
 import plotly.express as px
 import pandas as pd
-
-
-
-def tableAction():
-
-    button = DropdownAIO.Button([
-        html.Span(html.Span(className='fas fa-ellipsis-h icon-dark'), className='icon icon-sm'),
-        html.Span("Toggle Dropdown", className='visually-hidden')
-    ], className='btn btn-link text-dark dropdown-toggle-split m-0 p-0')
-
-    # Action column dropdown bottom-left. Ripped from the Volt transactions table using Firefox debug tools
-
-    style={
-        "position": "absolute",
-        "inset": "0px 0px auto auto",
-        "margin": "0px",
-        "transform": "translate3d(0px, 25.3333px, 0px)"
-        }
-
-    container = html.Div([
-        html.A([html.Span(className='fas fa-eye me-2'), "View Details" ], className='dropdown-item rounded-top', href='#'),
-        html.A([html.Span(className='fas fa-edit me-2'), "Edit"], className='dropdown-item', href='#'),
-        html.A([html.Span(className='fas fa-trash-alt me-2'), "Discard" ], className='dropdown-item text-danger rounded-bottom', href='#')
-    ], className='dropdown-menu py-0', style=style)
-
-    return html.Div(DropdownAIO(button, container, id='edit-parameter-button'), className='btn-group')
 
 
 def modal():
@@ -46,14 +19,14 @@ def modal():
                 dbc.Row(
                     [
                         dbc.Col(
-                            dbc.ModalTitle("Parameters Settings for Kedro Model Refinery"), 
+                            dbc.ModalTitle("Configuration Sources"), 
                             width="auto"  # Ensures the title takes up only the necessary space
                         ),
-                        dbc.Col(
-                            tableAction(), 
-                            width="auto",  # Ensures the action takes up only the necessary space
-                            className="text-end pe-4"  # Aligns content to the right
-                        ),
+                        # dbc.Col(
+                        #     tableAction(), 
+                        #     width="auto",  # Ensures the action takes up only the necessary space
+                        #     className="text-end pe-4"  # Aligns content to the right
+                        # ),
                     ],
                     justify="between",  # Spreads the columns to opposite sides
                     align="center",     # Vertically aligns content in the row
