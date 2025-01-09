@@ -2,9 +2,13 @@ from dash import Input, Output, State, html
 from pathlib import Path
 from kedro.framework.session import KedroSession
 from kedro.framework.startup import bootstrap_project
+import os
 import subprocess
 import socket
+import signal
 
+kedro_viz_process = None
+viz_port = None
 
 def register_callbacks(app, project_root):
     @app.callback(
@@ -26,11 +30,12 @@ def register_callbacks(app, project_root):
 
     @app.callback(
         Output("pipeline-viz", "children"),
-        Input("start-viz-button", "n_clicks")
+        [Input("start-viz-button", "n_clicks"),
+         Input("stop-viz-button", "n_clicks"),
+        ]
     )
-    def manage_pipeline_viz(start_clicks):
-        kedro_viz_process = None
-        viz_port = None
+    def manage_pipeline_viz(start_clicks, stop_clicks):
+        global kedro_viz_process, viz_port
 
         def __find_free_port(port=5001, max_port=65535):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,9 +54,11 @@ def register_callbacks(app, project_root):
                 try:
                     viz_port = __find_free_port()
 
+                    # Start Kedro Viz in a new process group
                     kedro_viz_process = subprocess.Popen(
                         f"cd {project_root} && kedro viz --autoreload --host=127.0.0.1 --port={viz_port}",
-                        shell=True
+                        shell=True,
+                        preexec_fn=os.setsid  # Create a new process group
                     )
                     return html.Div([
                         html.Div([
@@ -59,33 +66,34 @@ def register_callbacks(app, project_root):
                             html.A(
                                 f"http://127.0.0.1:{viz_port}/",
                                 href=f"http://127.0.0.1:{viz_port}/",
-                                target="_blank",  # Opens the link in a new tab
+                                target="_blank",
                                 style={
                                     "color": "#7FBBFF",
                                     "text-decoration": "underline",
                                 }
                             )
                         ]),
-                        # html.Button("Stop Kedro Viz", id="stop-viz-button", type='button', n_clicks=0, className='btn btn-gray-800 d-inline-flex align-items-center me-2',)
-
                     ])
                 except Exception as e:
                     return html.Div(f"Failed to start Kedro Viz: {str(e)}", style={"color": "red"})
 
-        # # Stop Kedro Viz
-        # if stop_clicks > 0:
-        #     if kedro_viz_process and kedro_viz_process.poll() is None:
-        #         try:
-        #             kedro_viz_process.terminate()
-        #             kedro_viz_process.wait()  # Wait for process to terminate
-        #             kedro_viz_process = None  # Reset the process variable
-        #             viz_port = None  # Reset the port variable
-        #             return html.Div("✨ Kedro Viz has been stopped.")
-        #         except Exception as e:
-        #             return html.Div(f"Failed to stop Kedro Viz: {str(e)}", style={"color": "red"})
+        # Stop Kedro Viz
+        if stop_clicks > 0:
+            if kedro_viz_process:
+                try:
+                    # Kill the entire process group
+                    os.killpg(os.getpgid(kedro_viz_process.pid), signal.SIGTERM)
+                    kedro_viz_process.wait(timeout=5)  # Ensure the process terminates
+                    kedro_viz_process = None  # Reset the process variable
+                    viz_port = None  # Reset the port variable
+                    return html.Div("✨ Kedro Viz has been stopped.")
+                except subprocess.TimeoutExpired:
+                    return html.Div("Failed to stop Kedro Viz: Timeout occurred.", style={"color": "red"})
+                except Exception as e:
+                    return html.Div(f"Failed to stop Kedro Viz: {str(e)}", style={"color": "red"})
 
-        # # Default output if no action is triggered
-        # return html.Div("Click the buttons to start or stop Kedro Viz.")
+        # Default output if no action is triggered
+        return html.Div("Click the buttons to start or stop Kedro Viz.")
 
 
     @app.callback(

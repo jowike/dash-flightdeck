@@ -19,12 +19,11 @@ def tableAction():
         }
 
     container = html.Div([
-        html.A([html.Span(className='fas fa-eye me-2'), "View Details" ], id="start-viz-button", n_clicks=0, className='dropdown-item rounded-top'),
-        html.A([html.Span(className='fas fa-edit me-2'), "Edit"], className='dropdown-item', href='#'),
-        html.A([html.Span(className='fas fa-trash-alt me-2'), "Discard" ], className='dropdown-item text-danger rounded-bottom', href='#')
+        html.A([html.Span(className='fas fa-project-diagram me-2'), "View Details" ], id="start-viz-button", n_clicks=0, className='dropdown-item rounded-top'),
+        html.A([html.Span(className='fas fa-stop me-2'), "Stop" ], id="stop-viz-button", n_clicks=0, className='dropdown-item rounded-bottom')
     ], className='dropdown-menu py-0', style=style)
 
-    return html.Div(DropdownAIO(button, container, id='edit-parameter-button'), className='btn-group')
+    return html.Div(DropdownAIO(button, container, id='manage-kedro-viz-button'), className='btn-group')
 
 
 def alertsNotifications():

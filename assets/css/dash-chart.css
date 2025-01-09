@@ -16,10 +16,6 @@
     stroke: #000000;
 }
 
-.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th .column-header--clear,
-.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th .column-header--delete,
-.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th .column-header--edit,
-
 .dropdown-button {
     padding: 0;
     margin: 0;
@@ -41,5 +37,6 @@ textarea {
     border-radius: 4px;
     box-shadow: none;
     box-sizing: border-box;
+    margin-left: 12px;
     /* resize: none; */
 }

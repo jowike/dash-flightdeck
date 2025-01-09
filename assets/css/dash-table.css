@@ -783,6 +783,7 @@
 .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header--clear,
 .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header--delete,
 .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header--edit,
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header--stop,
 .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header--hide {
   opacity: 0.1;
   padding-left: 2px;
