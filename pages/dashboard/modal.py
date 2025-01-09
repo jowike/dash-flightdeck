@@ -65,8 +65,14 @@ def modal():
                     [
                         dbc.Row(
                             [
-                                dbc.Label("Name property", className="mt-1"),
-                                dbc.Input(type="text", placeholder="Specify the name of the parameter"),
+                                # dbc.Label("Name property", className="mt-1"),
+                                # dbc.Input(type="text", placeholder="Specify the name of the parameter"),
+                                dbc.Label("Parameters", className="mt-1"),
+                                dcc.Textarea(
+                                    id='textarea-example',
+                                    value='Textarea content initialized\nwith multiple lines of text',
+                                    style={'width': '100%', 'height': 35},
+                                ),
                             ],
                             className="mb-2",
                         ),
@@ -79,8 +85,14 @@ def modal():
                         # ),
                         dbc.Row(
                             [
-                                dbc.Label("Value", className="mt-1"),
-                                dbc.Input(type="text", placeholder="Enter parameter value"),
+                                # dbc.Label("Value", className="mt-1"),
+                                # dbc.Input(type="text", placeholder="Enter parameter value"),
+                                dbc.Label("Data Catalog", className="mt-1"),
+                                dcc.Textarea(
+                                    id='textarea-example',
+                                    value='Another textarea content initialized\nwith multiple lines of text',
+                                    style={'width': '100%', 'height': 35},
+                                ),
                             ],
                             className="mb-2",
                         ),
