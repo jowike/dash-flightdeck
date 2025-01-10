@@ -13,7 +13,8 @@ from .dashboard import (
     newTasksButton,
     runButton,
     alertsNotifications,
-    modal
+    modal,
+    upload_modal
 )
 
 
@@ -27,8 +28,9 @@ sys.path.append(
 layout = html.Main(
     [
         topNavBar(),
-        modal(),
         buttonBar(newTasksButton(), runButton()),
+        modal(),
+        upload_modal(),
         html.Div([salesChart(), customers(), revenue(), bounceRate()], className="row"),
         html.Div(
             [

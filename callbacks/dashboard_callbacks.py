@@ -6,9 +6,14 @@ import os
 import subprocess
 import socket
 import signal
+import base64
+import pandas as pd
+import io
 
 kedro_viz_process = None
 viz_port = None
+TARGET_FOLDER = "/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/_test"
+os.makedirs(TARGET_FOLDER, exist_ok=True)  # Define specific target folder
 
 def register_callbacks(app, project_root):
     @app.callback(
@@ -97,12 +102,81 @@ def register_callbacks(app, project_root):
 
 
     @app.callback(
-        Output("modal", "is_open"),
-        [Input("advanced-config-modal-open", "n_clicks"), Input("close", "n_clicks")],
-        [State("modal", "is_open")],
+        Output("advanced-config-modal", "is_open"),
+        [Input("advanced-config-modal-open", "n_clicks"), Input("advanced-config-modal-close", "n_clicks")],
+        [State("advanced-config-modal", "is_open")],
     )
     def toggle_modal(n1, n2, is_open):
         if n1 or n2:
             return not is_open
         return is_open
 
+    @app.callback(
+        Output("upload-files-modal", "is_open"),
+        [Input("upload-files-modal-open", "n_clicks"), Input("upload-files-modal-close", "n_clicks")],
+        [State("upload-files-modal", "is_open")],
+    )
+    def toggle_upload(n1, n2, is_open):
+        if n1 or n2:
+            return not is_open
+        return is_open
+
+    
+    # Callback
+    @app.callback(Output('output-data-upload', 'children'),
+                Input('upload-data', 'contents'),
+                State('upload-data', 'filename'))
+    def update_output(list_of_contents, list_of_names):
+
+        def __handle_upload(contents, filename):
+            try:
+                # file_path = os.path.basename(filename)
+                # target_path = os.path.join(TARGET_FOLDER, filename)
+                # os.rename(file_path, target_path)
+                content_type, content_string = contents.split(',')
+                decoded = base64.b64decode(content_string)
+
+                # Save the file to the target folder
+                target_path = os.path.join(TARGET_FOLDER, filename)
+                with open(target_path, 'wb') as f:
+                    f.write(decoded)
+
+                # Calculate file size
+                file_size_kb = len(decoded) / 1024
+                file_size_str = f"{file_size_kb:.2f} KB" if file_size_kb < 1024 else f"{file_size_kb / 1024:.2f} MB"
+                
+                # Success message with file details
+                message = f"Upload successful!\nFile: {filename} ({file_size_str})"
+                icon_color = '#37BE67'  # Green for success
+                icon_class = 'fa fa-check'  # Font Awesome check icon
+            except Exception:
+                # Failure message
+                message = "Upload failed! Please try again."
+                icon_color = '#F4405E'  # Red for failure
+                icon_class = 'fas fa-times'  # Font Awesome cross icon
+
+            return html.Div([
+                html.Div([
+                    html.I(className=icon_class, style={
+                        'margin-right': '10px',
+                        'font-size': '20px',
+                        'color': icon_color  # Only the icon is colored
+                    }),
+                    html.Span(message, style={
+                        'font-size': '14px',
+                        'font-weight': 'bold',
+                        'color': '#000000'  # Message text is black
+                    }),
+                ], style={
+                    'padding': '10px',
+                    'margin-top': '10px',
+                    'text-align': 'center',
+                    'display': 'inline-flex',
+                    'align-items': 'center',
+                })
+            ])
+        if list_of_contents is not None:
+            children = [
+                __handle_upload(c, n) for c, n in
+                zip(list_of_contents, list_of_names)]
+            return children

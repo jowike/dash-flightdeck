@@ -2,7 +2,7 @@ from dash_spa import DashSPA, page_container
 from themes import VOLT
 from server import serve_app
 from callbacks.dashboard_callbacks import register_callbacks  # Import the callback registry function
-
+import os
 import sys
 sys.path.append("/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/dependencies/")
 
@@ -24,6 +24,7 @@ external_scripts = [
 # Global variables to store the pipeline status and timestamp
 pipeline_status = "Not started"
 last_run_timestamp = "N/A"
+
 
 def create_dash():
     app = DashSPA( __name__,

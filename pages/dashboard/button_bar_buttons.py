@@ -8,7 +8,7 @@ def newTasksButton():
     return DropdownButtonAIO([
         # dropdownButtonWithIcon("Upload Files", ICON.UPLOAD, id="upload-files-open"),
         # dropdownButtonWithIcon("Advanced configuration", ICON.CUBE_TRANSPARENT, id="adv-config-open"),
-        html.Div([dropdownLink("Upload Files", ICON.UPLOAD)], id="upload-files-button", n_clicks=0, className="dropdown-button", style={"height": "fit-content"},),
+        html.Div([dropdownLink("Upload Files", ICON.UPLOAD)], id="upload-files-modal-open", n_clicks=0, className="dropdown-button", style={"height": "fit-content"},),
         html.Div([dropdownLink("Advanced configuration", ICON.CUBE_TRANSPARENT)], id="advanced-config-modal-open", n_clicks=0, className="dropdown-button", style={"height": "fit-content"},),
     ], "Settings", buttonColor="gray-800", buttonIcon=ICON.SETTINGS)
 

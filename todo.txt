@@ -1,0 +1,6 @@
+TODO: statusy pipeline'u: idle / running / completed (success / failure)
+TODO: edycja parametrów (modal + edit / discard dropdown)
+TODO: upload files
+TODO: save kedro results to reporting/*
+TODO: replace placeholders with results saved to reporting/*
+TODO: make dash app executable (Desktop-like)

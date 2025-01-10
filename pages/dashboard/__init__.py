@@ -9,3 +9,4 @@ from .acquisition import acquisition
 from .button_bar_buttons import newTasksButton, runButton
 from .alerts_notifications import alertsNotifications
 from .modal import modal
+from .upload import upload_modal

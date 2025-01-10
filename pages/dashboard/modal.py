@@ -100,11 +100,11 @@ def modal():
                 )
             ),
             dbc.ModalFooter(
-                dbc.Button("Close", id="close", className="ml-auto")
+                dbc.Button("Close", id="advanced-config-modal-close", className="ml-auto")
             ),
 
         ],
-            id="modal",
+            id="advanced-config-modal",
             is_open=False,    # True, False
             size="xl",        # "sm", "lg", "xl"
             backdrop=True,    # True, False or Static for modal to not be closed by clicking on backdrop
