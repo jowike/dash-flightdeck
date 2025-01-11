@@ -8,11 +8,13 @@ import socket
 import signal
 import base64
 import pandas as pd
-import io
-import yaml
+from dash import ctx, no_update  # Dash context to track which input triggered the callback
+
 
 kedro_viz_process = None
 viz_port = None
+
+from config import parameters, data_catalog
 
 
 def register_callbacks(app, project_root):
@@ -182,10 +184,10 @@ def register_callbacks(app, project_root):
             return children
     # Callback to save changes
     @app.callback(
-        Output("output-edit-advanced-config", "children"),  # Update button text for feedback
+        Output("output-edit-advanced-config", "children"),
         Input("save-button", "n_clicks"),
         State("textarea-parameters", "value"),
-        State("textarea-data-catalog", "value"),
+        State("textarea-catalog", "value"),
         prevent_initial_call=True,
     )
     def save_file(n_clicks, parameters_content, data_catalog_content):
@@ -229,3 +231,30 @@ def register_callbacks(app, project_root):
             })
         ])
 
+    # Callback to enable and disable editing
+    @app.callback(
+        [
+            Output("textarea-parameters", "disabled"),
+            Output("textarea-catalog", "disabled"),
+            Output("textarea-parameters", "value"),
+            Output("textarea-catalog", "value"),
+        ],
+        [
+            Input("enable-edit", "n_clicks"),
+            Input("save-button", "n_clicks"),
+            Input("discard-changes", "n_clicks"),
+        ],
+    )
+    def toggle_textareas(enable_clicks, save_clicks, discard_clicks):
+        # print(f"Triggered by: {ctx.triggered_id}")
+        # print(f"Enable: {enable_clicks}, Save: {save_clicks}, Discard: {discard_clicks}")
+
+        # Check which button triggered the callback
+        if ctx.triggered_id == "enable-edit":
+            return False, False, no_update, no_update  # Enable both textareas
+        elif ctx.triggered_id == "save-button":
+            return True, True, no_update, no_update  # Disable both textareas
+        elif ctx.triggered_id == "discard-changes":
+            return True, True, parameters, data_catalog
+        # Default case (keep textareas disabled)
+        return True, True, no_update, no_update

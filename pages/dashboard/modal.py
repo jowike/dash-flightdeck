@@ -28,8 +28,8 @@ def modalAction():
         }
 
     container = html.Div([
-        html.A([html.Span(className='fas fa-edit me-2'), "Edit"], className='dropdown-item', href='#'),
-        html.A([html.Span(className='fas fa-trash-alt me-2'), "Discard" ], className='dropdown-item text-danger rounded-bottom', href='#')
+        html.A([html.Span(className='fas fa-edit me-2'), "Edit"], className='dropdown-item', id="enable-edit", n_clicks=0),
+        html.A([html.Span(className='fas fa-trash-alt me-2'), "Discard" ], className='dropdown-item text-danger rounded-bottom', id="discard-changes", n_clicks=0)
     ], className='dropdown-menu py-0', style=style)
 
     return html.Div(DropdownAIO(button, container, id='edit-parameter-button'), className='btn-group')
@@ -82,7 +82,8 @@ def modal(
                                             "marginLeft": "12px",         # Symmetric margin-left
                                             "marginRight": "12px",        # Symmetric margin-right
                                             "boxSizing": "border-box"     # Ensures padding doesn't affect width
-                                        }
+                                        },
+                                        disabled=True,
                                     ),
                             ],
                             className="mb-2",
@@ -100,7 +101,7 @@ def modal(
                                 # dbc.Input(type="text", placeholder="Enter parameter value"),
                                 dbc.Label("Data Catalog", className="mt-1"),
                                 dcc.Textarea(
-                                    id='textarea-data-catalog',
+                                    id='textarea-catalog',
                                     value=data_catalog,
                                     style={
                                         "height": "35px",
@@ -108,13 +109,14 @@ def modal(
                                         "marginLeft": "12px",         # Symmetric margin-left
                                         "marginRight": "12px",        # Symmetric margin-right
                                         "boxSizing": "border-box"     # Ensures padding doesn't affect width
-                                    }
+                                    },
+                                    disabled=True,
                                 ),
                             ],
                             className="mb-2",
                         ),
                         html.Div(id='output-edit-advanced-config'),
-                        dbc.Button("Save", id="save-button", color="primary"),
+                        dbc.Button("Save", id="save-button", color="primary", n_clicks=0),
                     ],
                 )
             ),
