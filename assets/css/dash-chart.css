@@ -24,19 +24,20 @@
 
 textarea {
     display: block;
-    width: 100%;
+    width: auto; /* Subtract total margin from the width */
     height: auto;
     padding: 7px;
     font-size: 14.5px;
     font-family: Arial, sans-serif;
     font-weight: normal;
     line-height: 1.5;
-    color: #585858 /* #4B5563 */;
+    color: #585858; /* #4B5563 */
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: none;
     box-sizing: border-box;
     margin-left: 12px;
+    margin-right: 12px; /* Ensures symmetric margins */
     /* resize: none; */
 }

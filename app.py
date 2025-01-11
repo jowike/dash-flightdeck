@@ -1,5 +1,6 @@
 from dash_spa import DashSPA, page_container
 from themes import VOLT
+from config import TARGET_FOLDER, PARAMETERS_PATH, CATALOG_PATH
 from server import serve_app
 from callbacks.dashboard_callbacks import register_callbacks  # Import the callback registry function
 import os
@@ -21,9 +22,7 @@ external_scripts = [
     "https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"
     ]
 
-# Global variables to store the pipeline status and timestamp
-pipeline_status = "Not started"
-last_run_timestamp = "N/A"
+os.makedirs(TARGET_FOLDER, exist_ok=True)  # Define specific target folder
 
 
 def create_dash():
@@ -39,6 +38,8 @@ def create_app(dash_factory, project_root) -> DashSPA:
     app = dash_factory()
     app.layout = page_container
     app.server.config['SECRET_KEY'] = "A secret key"
+    app.upload_target = TARGET_FOLDER
+    app.parameters_path, app.catalog_path = PARAMETERS_PATH, CATALOG_PATH
     register_callbacks(app, project_root)
     return app
 

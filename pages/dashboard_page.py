@@ -17,19 +17,19 @@ from .dashboard import (
     upload_modal
 )
 
-
+import os
 import sys
+from config import parameters, data_catalog
+
 
 register_page(__name__, path="/pages/dashboard", title="Dash/Flightdeck - Dashboard")
-sys.path.append(
-    "/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/dependencies/"
-)
+# parameters=load
 
 layout = html.Main(
     [
         topNavBar(),
         buttonBar(newTasksButton(), runButton()),
-        modal(),
+        modal(parameters=parameters, data_catalog=data_catalog),
         upload_modal(),
         html.Div([salesChart(), customers(), revenue(), bounceRate()], className="row"),
         html.Div(

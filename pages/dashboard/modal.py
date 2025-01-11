@@ -8,6 +8,7 @@ from dash_spa.components.dropdown_aio import DropdownAIO
 import dash_bootstrap_components as dbc         # pip install dash_bootstrap_components
 import plotly.express as px
 import pandas as pd
+# from app import app
 
 
 def modalAction():
@@ -34,7 +35,12 @@ def modalAction():
     return html.Div(DropdownAIO(button, container, id='edit-parameter-button'), className='btn-group')
 
 
-def modal():
+
+def modal(
+        parameters='Textarea content initialized\nwith multiple lines of text',
+        data_catalog='Another textarea content initialized\nwith multiple lines of text'
+        # parameters=app.parameters, data_catalog=app.data_catalog
+        ):
     return html.Div(
     [
         # dbc.Button("Add comment", id="open"),
@@ -66,12 +72,18 @@ def modal():
                                 # dbc.Label("Name property", className="mt-1"),
                                 # dbc.Input(type="text", placeholder="Specify the name of the parameter"),
                                 dbc.Label("Parameters", className="mt-1"),
-                                dcc.Textarea(
-                                    id='textarea-example',
-                                    value='Textarea content initialized\nwith multiple lines of text',
-                                    style={'width': '100%', 'height': 35},
-                                    className="mt-1"
-                                ),
+                                    dcc.Textarea(
+                                        id='textarea-parameters',
+                                        value=parameters,
+                                        className="mt-1",
+                                        style={
+                                            "height": "35px",
+                                            "width": "calc(100% - 24px)",  # Adjust width for 12px margins
+                                            "marginLeft": "12px",         # Symmetric margin-left
+                                            "marginRight": "12px",        # Symmetric margin-right
+                                            "boxSizing": "border-box"     # Ensures padding doesn't affect width
+                                        }
+                                    ),
                             ],
                             className="mb-2",
                         ),
@@ -88,14 +100,21 @@ def modal():
                                 # dbc.Input(type="text", placeholder="Enter parameter value"),
                                 dbc.Label("Data Catalog", className="mt-1"),
                                 dcc.Textarea(
-                                    id='textarea-example',
-                                    value='Another textarea content initialized\nwith multiple lines of text',
-                                    style={'width': '100%', 'height': 35},
+                                    id='textarea-data-catalog',
+                                    value=data_catalog,
+                                    style={
+                                        "height": "35px",
+                                        "width": "calc(100% - 24px)",  # Adjust width for 12px margins
+                                        "marginLeft": "12px",         # Symmetric margin-left
+                                        "marginRight": "12px",        # Symmetric margin-right
+                                        "boxSizing": "border-box"     # Ensures padding doesn't affect width
+                                    }
                                 ),
                             ],
                             className="mb-2",
                         ),
-                        dbc.Button("Save", color="primary"),
+                        html.Div(id='output-edit-advanced-config'),
+                        dbc.Button("Save", id="save-button", color="primary"),
                     ],
                 )
             ),

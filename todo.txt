@@ -1,6 +1,8 @@
-TODO: statusy pipeline'u: idle / running / completed (success / failure)
 TODO: edycja parametrów (modal + edit / discard dropdown)
-TODO: upload files
 TODO: save kedro results to reporting/*
 TODO: replace placeholders with results saved to reporting/*
 TODO: make dash app executable (Desktop-like)
+
+MVP: upload files --> TODO: https://github.com/fohrloop/dash-uploader?tab=readme-ov-file#dash-uploader-vs-dccupload
+DONE: edycja parametrów – interakcja z plikami
+

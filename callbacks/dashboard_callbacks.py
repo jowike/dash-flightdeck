@@ -9,11 +9,11 @@ import signal
 import base64
 import pandas as pd
 import io
+import yaml
 
 kedro_viz_process = None
 viz_port = None
-TARGET_FOLDER = "/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/_test"
-os.makedirs(TARGET_FOLDER, exist_ok=True)  # Define specific target folder
+
 
 def register_callbacks(app, project_root):
     @app.callback(
@@ -137,7 +137,7 @@ def register_callbacks(app, project_root):
                 decoded = base64.b64decode(content_string)
 
                 # Save the file to the target folder
-                target_path = os.path.join(TARGET_FOLDER, filename)
+                target_path = os.path.join(app.upload_target, filename)
                 with open(target_path, 'wb') as f:
                     f.write(decoded)
 
@@ -180,3 +180,52 @@ def register_callbacks(app, project_root):
                 __handle_upload(c, n) for c, n in
                 zip(list_of_contents, list_of_names)]
             return children
+    # Callback to save changes
+    @app.callback(
+        Output("output-edit-advanced-config", "children"),  # Update button text for feedback
+        Input("save-button", "n_clicks"),
+        State("textarea-parameters", "value"),
+        State("textarea-data-catalog", "value"),
+        prevent_initial_call=True,
+    )
+    def save_file(n_clicks, parameters_content, data_catalog_content):
+        def __save_yaml(file_path, content):
+            with open(file_path, "w") as file:
+                # yaml.safe_dump(yaml.safe_load(content), file)
+                file.write(content)
+
+        try:
+            __save_yaml(app.parameters_path, parameters_content)
+            __save_yaml(app.catalog_path, data_catalog_content)
+
+            message = "Update successful!"
+            icon_color = '#37BE67'  # Green for success
+            icon_class = 'fa fa-check'  # Font Awesome check icon
+
+        except Exception:
+            message = "Edit failed! Please try again."
+            icon_color = '#F4405E'  # Red for failure
+            icon_class = 'fas fa-times'  # Font Awesome cross icon
+
+        return html.Div([
+            html.Div([
+                html.I(className=icon_class, style={
+                    'margin-right': '10px',
+                    'font-size': '20px',
+                    'color': icon_color  # Only the icon is colored
+                }),
+                html.Span(message, style={
+                    'font-size': '14px',
+                    'font-weight': 'bold',
+                    'color': '#000000'  # Message text is black
+                }),
+            ], style={
+                'padding': '10px',
+                'margin-top': '10px',
+                'margin-bottom': '20px',
+                'text-align': 'center',
+                'display': 'inline-flex',
+                'align-items': 'center',
+            })
+        ])
+

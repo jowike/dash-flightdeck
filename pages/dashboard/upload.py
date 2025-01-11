@@ -32,7 +32,7 @@ def upload_modal():
                             ' to upload your file or drag and drop',
                         ]),
                         style={
-                            'width': '100%',
+                            "width": "calc(100% - 24px)",  # Adjust width for 12px margins
                             'height': '120px',
                             'lineHeight': '60px',
                             'borderWidth': '2px',
@@ -40,7 +40,9 @@ def upload_modal():
                             'borderRadius': '10px',
                             'textAlign': 'center',
                             'backgroundColor': '#f8f9fa',
-                            'margin': '20px auto',
+                            "marginLeft": "12px",         # Symmetric margin-left
+                            "marginRight": "12px",        # Symmetric margin-right
+                            "boxSizing": "border-box",     # Ensures padding doesn't affect width
                             'padding': '30px',
                             'cursor': 'pointer',
                             'fontSize': '16px',
