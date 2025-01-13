@@ -1,4 +1,5 @@
 from dash import Input, Output, State, html
+from dash.exceptions import PreventUpdate
 from pathlib import Path
 from kedro.framework.session import KedroSession
 from kedro.framework.startup import bootstrap_project
@@ -9,7 +10,7 @@ import signal
 import base64
 import pandas as pd
 from dash import ctx, no_update  # Dash context to track which input triggered the callback
-
+from config import load_data
 
 kedro_viz_process = None
 viz_port = None
@@ -258,3 +259,60 @@ def register_callbacks(app, project_root):
             return True, True, parameters, data_catalog
         # Default case (keep textareas disabled)
         return True, True, no_update, no_update
+    
+
+    # Periodic callback to update data in `dcc.Store` when the file changes
+    @app.callback(
+        Output('shared-data', 'data'),
+        Input('interval-component', 'n_intervals')
+    )
+    def update_shared_data(n_intervals):
+        data = load_data()
+        if data:
+            return data
+        raise PreventUpdate  # Prevent update if no new data
+
+    # # Component for updating the sales chart based on the data in the store
+    # @app.callback(
+    #     Output('sales-chart-container', 'children'),
+    #     Input('shared-data', 'data')
+    # )
+    # def update_sales_chart(data):
+    #     if data is None:
+    #         raise PreventUpdate
+
+    #     options = {
+    #         'low': 0,
+    #         'showArea': True,
+    #         'fullWidth': True,
+    #         'axisX': {'position': 'end', 'showGrid': True},
+    #         'axisY': {'showGrid': False, 'showLabel': False}
+    #     }
+
+    #     return html.Div([
+    #         DashChartist(
+    #             className='ct-chart-sales-value ct-double-octave ct-series-g',
+    #             type="Line",
+    #             options=options,
+    #             tooltips=True,
+    #             data=data
+    #         )
+    #     ], className='card bg-yellow-100 border-0 shadow')
+
+
+    # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        Output('sales-chart', 'data'),  # Update the data property of the chart
+        Input('shared-data', 'data')  # Get the data from the store
+    )
+    def update_sales_chart(data):
+        if data is None:
+            raise PreventUpdate  # Do not update if no data
+
+        # Transform the data into the format expected by DashChartist
+        # chart_data = {
+        #     'labels': data['labels'],
+        #     'series': [data['series']]
+        # }
+
+        return data  # Return the transformed data
