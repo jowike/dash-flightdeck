@@ -10,7 +10,7 @@ import signal
 import base64
 import pandas as pd
 from dash import ctx, no_update  # Dash context to track which input triggered the callback
-from config import load_data
+from config import load_predictions
 
 kedro_viz_process = None
 viz_port = None
@@ -267,9 +267,11 @@ def register_callbacks(app, project_root):
         Input('interval-component', 'n_intervals')
     )
     def update_shared_data(n_intervals):
-        data = load_data()
-        if data:
-            return data
+        shared_data={}
+        shared_data["predictions_base"] = load_predictions(type="base")
+        # shared_data["predictions_adj"] = load_predictions(type="adj")
+        if all(shared_data.values()):
+            return shared_data
         raise PreventUpdate  # Prevent update if no new data
 
     # # Component for updating the sales chart based on the data in the store
@@ -305,8 +307,8 @@ def register_callbacks(app, project_root):
         Output('sales-chart', 'data'),  # Update the data property of the chart
         Input('shared-data', 'data')  # Get the data from the store
     )
-    def update_sales_chart(data):
-        if data is None:
+    def update_sales_chart(shared_data):
+        if shared_data is None:
             raise PreventUpdate  # Do not update if no data
 
         # Transform the data into the format expected by DashChartist
@@ -315,4 +317,4 @@ def register_callbacks(app, project_root):
         #     'series': [data['series']]
         # }
 
-        return data  # Return the transformed data
+        return shared_data["predictions_base"]  # Return the transformed data

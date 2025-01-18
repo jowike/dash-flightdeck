@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc 
 from dash_spa import register_page, prefix
 
 from .common import topNavBar, footer, buttonBar
@@ -19,14 +19,22 @@ from .dashboard import (
 
 import os
 import sys
+import pandas as pd
 from config import parameters, data_catalog
 
 
 register_page(__name__, path="/pages/dashboard", title="Dash/Flightdeck - Dashboard")
-# parameters=load
+
 
 layout = html.Main(
     [
+        dcc.Interval(
+            id='interval-component',
+            interval=5000,  # Check for file updates every 5 seconds
+            n_intervals=0
+        ),
+        # Store for shared data
+        dcc.Store(id='shared-data'),  # Store the shared data here
         topNavBar(),
         buttonBar(newTasksButton(), runButton()),
         modal(parameters=parameters, data_catalog=data_catalog),

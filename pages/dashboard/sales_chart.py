@@ -3,7 +3,7 @@ from dash_chartist import DashChartist
 
 import os
 import pandas as pd
-from config import load_data
+from config import load_predictions
 
 # data = {
 #     "labels": ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -25,7 +25,7 @@ from config import load_data
 #         }
 #     return df
 
-data = load_data()
+data = load_predictions(type="base")
 
 options = {
     # 'low': 0,
@@ -74,7 +74,7 @@ def salesChart():
                     type=chartType,
                     options=options,
                     tooltips=True,
-                    data=data,
+                    data=data,  # This will be populated (overwritten) dynamically via callback
                     # data={},  # This will be populated dynamically via callback
                     id='sales-chart',
                     )
