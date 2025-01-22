@@ -13,19 +13,7 @@ from config import load_predictions
 #           ]
 # }
 
-# def load_data(file_path="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/data.xlsx"):
-#     if os.path.exists(file_path):
-#         df = pd.read_excel(file_path, sheet_name="data")
-#         df["dt"] = df["dt"].astype(str).replace(r"-\d{2}$", "", regex=True)
-#         # df["dt"] = pd.to_datetime(df["dt"])
-
-#         return {
-#             "labels": [label if index % 3 == 0 else "" for index, label in enumerate(df["dt"])],
-#             "series": [df["y_pred_retr"].tolist(), df["y_actual_retr"].tolist()]
-#         }
-#     return df
-
-data = load_predictions(type="base")
+# data = load_predictions(type="base")
 
 options = {
     # 'low': 0,
@@ -74,8 +62,7 @@ def salesChart():
                     type=chartType,
                     options=options,
                     tooltips=True,
-                    data=data,  # This will be populated (overwritten) dynamically via callback
-                    # data={},  # This will be populated dynamically via callback
+                    data={},  # This will be populated dynamically via callback
                     id='sales-chart',
                     )
             ], className='card-body p-2')

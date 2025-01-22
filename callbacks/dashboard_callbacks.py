@@ -1,4 +1,6 @@
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, callback_context
+from dash_spa.components.table import TableContext
+
 from dash.exceptions import PreventUpdate
 from pathlib import Path
 from kedro.framework.session import KedroSession
@@ -10,13 +12,29 @@ import signal
 import base64
 import pandas as pd
 from dash import ctx, no_update  # Dash context to track which input triggered the callback
-from config import load_predictions
+
+from config import load_predictions, load_cards, load_contributions, load_series
+from pages.icons.hero import ICON
+from pages.dashboard.page_visits_table import PageVisitsTable
+
+from typing import List
+from dash import html, dcc, Output
+from dash_spa import prefix, trigger_index
+from dash_spa.components.dropdown_aio import DropdownAIO
+from dash_spa.components.button_container_aoi import ButtonContainerAIO
+from pages.icons.hero import ICON
+
+from dash_spa.components.table import SearchAIO, TableContext
+
+
+PageVisitsTable = TableContext.Provider(id='page_visits_table')(PageVisitsTable)
 
 kedro_viz_process = None
 viz_port = None
 
-from config import parameters, data_catalog
+from config import parameters, data_catalog, load_contributions
 
+_, dropdown_options = load_contributions()
 
 def register_callbacks(app, project_root):
     @app.callback(
@@ -269,52 +287,125 @@ def register_callbacks(app, project_root):
     def update_shared_data(n_intervals):
         shared_data={}
         shared_data["predictions_base"] = load_predictions(type="base")
-        # shared_data["predictions_adj"] = load_predictions(type="adj")
+        shared_data["cards"] = load_cards()
+        shared_data["local_explanation"], _ = load_contributions()
+        # shared_data["global_explanation"] = load_series(series_id=dropdown_options[0])
+
         if all(shared_data.values()):
             return shared_data
         raise PreventUpdate  # Prevent update if no new data
 
-    # # Component for updating the sales chart based on the data in the store
-    # @app.callback(
-    #     Output('sales-chart-container', 'children'),
-    #     Input('shared-data', 'data')
-    # )
-    # def update_sales_chart(data):
-    #     if data is None:
-    #         raise PreventUpdate
-
-    #     options = {
-    #         'low': 0,
-    #         'showArea': True,
-    #         'fullWidth': True,
-    #         'axisX': {'position': 'end', 'showGrid': True},
-    #         'axisY': {'showGrid': False, 'showLabel': False}
-    #     }
-
-    #     return html.Div([
-    #         DashChartist(
-    #             className='ct-chart-sales-value ct-double-octave ct-series-g',
-    #             type="Line",
-    #             options=options,
-    #             tooltips=True,
-    #             data=data
-    #         )
-    #     ], className='card bg-yellow-100 border-0 shadow')
-
 
     # Define a callback to update the data in the chart when the store data changes
     @app.callback(
-        Output('sales-chart', 'data'),  # Update the data property of the chart
+        Output('sales-chart', 'data'),
         Input('shared-data', 'data')  # Get the data from the store
     )
     def update_sales_chart(shared_data):
         if shared_data is None:
             raise PreventUpdate  # Do not update if no data
 
-        # Transform the data into the format expected by DashChartist
-        # chart_data = {
-        #     'labels': data['labels'],
-        #     'series': [data['series']]
-        # }
-
         return shared_data["predictions_base"]  # Return the transformed data
+    
+    # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        [
+            Output('var-pred-value', 'children'),
+            Output('arima-pred-value', 'children'),
+            Output('conf-int-value', 'children'),
+            Output('var-pred-change', 'children'),
+            Output('arima-pred-change', 'children'),
+            Output('conf-int-change', 'children')
+        ],
+        Input('shared-data', 'data')  # Get the data from the store
+    )
+    def update_cards(shared_data):
+        if not shared_data:
+            raise PreventUpdate  # Do not update if no data
+
+        data = shared_data.get("cards", {})
+
+        # Extract values
+        var_value = float(data["VAR"]["Value"])
+        arima_value = float(data["ARIMA"]["Value"])
+        conf_int_value = float(data["Confidence Interval"]["Value"])
+
+        # Calculate differences for "Since Last Month"
+        var_diff = float(data["VAR"]["Since Last Month"])
+        arima_diff = float(data["ARIMA"]["Since Last Month"])
+        conf_int_diff = float(data["Confidence Interval"]["Since Last Month"])
+
+        # Function to format changes and icons
+        def format_diff(diff_value):
+            if diff_value > 0:
+                return "text-success fw-bolder", ICON.UP_ARROW.XS
+            elif diff_value < 0:
+                return "text-danger fw-bolder", ICON.DOWN_ARROW.XS
+            return "text fw-bolder", ICON.CHEVRON_UP_DOWN
+
+        # Format VAR and ARIMA differences
+        var_diff_class, var_diff_icon = format_diff(var_diff)
+        arima_diff_class, arima_diff_icon = format_diff(arima_diff)
+
+        # Format children for VAR and ARIMA change
+        var_div_children = [
+            "Since Last Month",
+            var_diff_icon,
+            html.Span('{:.1%}'.format(var_diff).replace(".0%", "%"), className=var_diff_class)
+        ]
+        arima_div_children = [
+            "Since Last Month",
+            arima_diff_icon,
+            html.Span('{:.1%}'.format(arima_diff).replace(".0%", "%"), className=arima_diff_class)
+        ]
+
+        # Return formatted data
+        return (
+            '{:,.1f}'.format(var_value).rstrip('.0'),  # Format VAR value
+            '{:,.1f}'.format(arima_value).rstrip('.0'),  # Format ARIMA value
+            '{:,.0f}k'.format(conf_int_value / 1000),  # Format Confidence Interval value in thousands
+            var_div_children,  # VAR change
+            arima_div_children,  # ARIMA change
+            '{:,.1%}'.format(conf_int_diff).replace(".0%", "%"),  # Confidence interval change
+        )
+
+    # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        Output('local-explanation-table', 'children'),
+        Input('shared-data', 'data')
+    )
+    def update_local_explanation(shared_data):
+        if not shared_data:
+            raise PreventUpdate
+        
+        local_explanation_data = shared_data["local_explanation"]
+        columns = [{'id': c, 'name': c} for c in local_explanation_data[0].keys()]
+
+        # Instantiate the PageVisitsTable with the updated data
+        table = PageVisitsTable(
+                    data=local_explanation_data,
+                    columns=columns,
+                )
+        return table
+
+    # @app.callback(
+    #     Output('global-explanation-chart', 'data'),
+    #     Input('shared-data', 'data'), 
+    # )
+    # def update_global_explanation(shared_data):
+    #     if shared_data is None:
+    #         raise PreventUpdate
+    #     return shared_data["global_explanation"]
+    
+    @app.callback(
+        Output("global-explanation-chart", "data"),
+        [Input(f"option-{option}", "n_clicks") for option in dropdown_options],
+    )
+    def update_selection(*args):
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        clicked_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        selected_option = clicked_id.split("-")[1]
+        data = load_series(series_id=selected_option)
+        return data
