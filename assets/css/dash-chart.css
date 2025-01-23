@@ -16,6 +16,24 @@
     stroke: #000000;
 }
 
+.circle-black {
+    background-color: #000000;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.circle-purple {
+    background-color: #8494FF;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
 .dropdown-button {
     padding: 0;
     margin: 0;

@@ -11,9 +11,19 @@ import socket
 import signal
 import base64
 import pandas as pd
-from dash import ctx, no_update  # Dash context to track which input triggered the callback
+from dash import (
+    ctx,
+    no_update,
+)  # Dash context to track which input triggered the callback
 
-from config import load_predictions, load_cards, load_contributions, load_series
+from config import (
+    load_predictions,
+    load_cards,
+    load_contributions,
+    load_series,
+    load_evaluation,
+    format_diff,
+)
 from pages.icons.hero import ICON
 from pages.dashboard.page_visits_table import PageVisitsTable
 
@@ -27,7 +37,7 @@ from pages.icons.hero import ICON
 from dash_spa.components.table import SearchAIO, TableContext
 
 
-PageVisitsTable = TableContext.Provider(id='page_visits_table')(PageVisitsTable)
+PageVisitsTable = TableContext.Provider(id="page_visits_table")(PageVisitsTable)
 
 kedro_viz_process = None
 viz_port = None
@@ -36,10 +46,12 @@ from config import parameters, data_catalog, load_contributions
 
 _, dropdown_options = load_contributions()
 
+# Function to format changes and icons
+
+
 def register_callbacks(app, project_root):
     @app.callback(
-        Output("pipeline-status", "children"),
-        Input("run-pipeline-button", "n_clicks")
+        Output("pipeline-status", "children"), Input("run-pipeline-button", "n_clicks")
     )
     def trigger_pipeline_run(n_clicks):
         if n_clicks > 0:
@@ -48,17 +60,21 @@ def register_callbacks(app, project_root):
                 bootstrap_project(Path(project_root))
                 with KedroSession.create(Path(project_root)) as session:
                     session.run()
-                return html.Div("Pipeline executed successfully!", style={"color": "green"})
+                return html.Div(
+                    "Pipeline executed successfully!", style={"color": "green"}
+                )
             except Exception as e:
-                return html.Div(f"Pipeline execution failed: {str(e)}", style={"color": "red"})
+                return html.Div(
+                    f"Pipeline execution failed: {str(e)}", style={"color": "red"}
+                )
         return html.Div()  # Empty div initially
-
 
     @app.callback(
         Output("pipeline-viz", "children"),
-        [Input("start-viz-button", "n_clicks"),
-         Input("stop-viz-button", "n_clicks"),
-        ]
+        [
+            Input("start-viz-button", "n_clicks"),
+            Input("stop-viz-button", "n_clicks"),
+        ],
     )
     def manage_pipeline_viz(start_clicks, stop_clicks):
         global kedro_viz_process, viz_port
@@ -67,12 +83,12 @@ def register_callbacks(app, project_root):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             while port <= max_port:
                 try:
-                    sock.bind(('', port))
+                    sock.bind(("", port))
                     sock.close()
                     return port
                 except OSError:
                     port += 1
-            raise IOError('no free ports')
+            raise IOError("no free ports")
 
         # Start Kedro Viz
         if start_clicks > 0:
@@ -84,24 +100,30 @@ def register_callbacks(app, project_root):
                     kedro_viz_process = subprocess.Popen(
                         f"cd {project_root} && kedro viz --autoreload --host=127.0.0.1 --port={viz_port}",
                         shell=True,
-                        preexec_fn=os.setsid  # Create a new process group
+                        preexec_fn=os.setsid,  # Create a new process group
                     )
-                    return html.Div([
-                        html.Div([
-                            "✨ Kedro Viz is running at ",
-                            html.A(
-                                f"http://127.0.0.1:{viz_port}/",
-                                href=f"http://127.0.0.1:{viz_port}/",
-                                target="_blank",
-                                style={
-                                    "color": "#7FBBFF",
-                                    "text-decoration": "underline",
-                                }
-                            )
-                        ]),
-                    ])
+                    return html.Div(
+                        [
+                            html.Div(
+                                [
+                                    "✨ Kedro Viz is running at ",
+                                    html.A(
+                                        f"http://127.0.0.1:{viz_port}/",
+                                        href=f"http://127.0.0.1:{viz_port}/",
+                                        target="_blank",
+                                        style={
+                                            "color": "#7FBBFF",
+                                            "text-decoration": "underline",
+                                        },
+                                    ),
+                                ]
+                            ),
+                        ]
+                    )
                 except Exception as e:
-                    return html.Div(f"Failed to start Kedro Viz: {str(e)}", style={"color": "red"})
+                    return html.Div(
+                        f"Failed to start Kedro Viz: {str(e)}", style={"color": "red"}
+                    )
 
         # Stop Kedro Viz
         if stop_clicks > 0:
@@ -114,17 +136,36 @@ def register_callbacks(app, project_root):
                     viz_port = None  # Reset the port variable
                     return html.Div("✨ Kedro Viz has been stopped.")
                 except subprocess.TimeoutExpired:
-                    return html.Div("Failed to stop Kedro Viz: Timeout occurred.", style={"color": "red"})
+                    return html.Div(
+                        "Failed to stop Kedro Viz: Timeout occurred.",
+                        style={"color": "red"},
+                    )
                 except Exception as e:
-                    return html.Div(f"Failed to stop Kedro Viz: {str(e)}", style={"color": "red"})
+                    return html.Div(
+                        f"Failed to stop Kedro Viz: {str(e)}", style={"color": "red"}
+                    )
 
         # Default output if no action is triggered
         return html.Div("Click the buttons to start or stop Kedro Viz.")
 
+    # Callback to toggle the modal visibility
+    @app.callback(
+        Output("guidelines-modal", "is_open"),
+        [Input("info-icon", "n_clicks"), Input("close-modal", "n_clicks")],
+        [State("guidelines-modal", "is_open")],
+    )
+    def toggle_modal(info_clicks, close_clicks, is_open):
+        if info_clicks or close_clicks:
+            return not is_open
+        return is_open
+
 
     @app.callback(
         Output("advanced-config-modal", "is_open"),
-        [Input("advanced-config-modal-open", "n_clicks"), Input("advanced-config-modal-close", "n_clicks")],
+        [
+            Input("advanced-config-modal-open", "n_clicks"),
+            Input("advanced-config-modal-close", "n_clicks"),
+        ],
         [State("advanced-config-modal", "is_open")],
     )
     def toggle_modal(n1, n2, is_open):
@@ -134,7 +175,10 @@ def register_callbacks(app, project_root):
 
     @app.callback(
         Output("upload-files-modal", "is_open"),
-        [Input("upload-files-modal-open", "n_clicks"), Input("upload-files-modal-close", "n_clicks")],
+        [
+            Input("upload-files-modal-open", "n_clicks"),
+            Input("upload-files-modal-close", "n_clicks"),
+        ],
         [State("upload-files-modal", "is_open")],
     )
     def toggle_upload(n1, n2, is_open):
@@ -142,65 +186,82 @@ def register_callbacks(app, project_root):
             return not is_open
         return is_open
 
-    
     # Callback
-    @app.callback(Output('output-data-upload', 'children'),
-                Input('upload-data', 'contents'),
-                State('upload-data', 'filename'))
+    @app.callback(
+        Output("output-data-upload", "children"),
+        Input("upload-data", "contents"),
+        State("upload-data", "filename"),
+    )
     def update_output(list_of_contents, list_of_names):
-
         def __handle_upload(contents, filename):
             try:
                 # file_path = os.path.basename(filename)
                 # target_path = os.path.join(TARGET_FOLDER, filename)
                 # os.rename(file_path, target_path)
-                content_type, content_string = contents.split(',')
+                content_type, content_string = contents.split(",")
                 decoded = base64.b64decode(content_string)
 
                 # Save the file to the target folder
                 target_path = os.path.join(app.upload_target, filename)
-                with open(target_path, 'wb') as f:
+                with open(target_path, "wb") as f:
                     f.write(decoded)
 
                 # Calculate file size
                 file_size_kb = len(decoded) / 1024
-                file_size_str = f"{file_size_kb:.2f} KB" if file_size_kb < 1024 else f"{file_size_kb / 1024:.2f} MB"
-                
+                file_size_str = (
+                    f"{file_size_kb:.2f} KB"
+                    if file_size_kb < 1024
+                    else f"{file_size_kb / 1024:.2f} MB"
+                )
+
                 # Success message with file details
                 message = f"Upload successful!\nFile: {filename} ({file_size_str})"
-                icon_color = '#37BE67'  # Green for success
-                icon_class = 'fa fa-check'  # Font Awesome check icon
+                icon_color = "#37BE67"  # Green for success
+                icon_class = "fa fa-check"  # Font Awesome check icon
             except Exception:
                 # Failure message
                 message = "Upload failed! Please try again."
-                icon_color = '#F4405E'  # Red for failure
-                icon_class = 'fas fa-times'  # Font Awesome cross icon
+                icon_color = "#F4405E"  # Red for failure
+                icon_class = "fas fa-times"  # Font Awesome cross icon
 
-            return html.Div([
-                html.Div([
-                    html.I(className=icon_class, style={
-                        'margin-right': '10px',
-                        'font-size': '20px',
-                        'color': icon_color  # Only the icon is colored
-                    }),
-                    html.Span(message, style={
-                        'font-size': '14px',
-                        'font-weight': 'bold',
-                        'color': '#000000'  # Message text is black
-                    }),
-                ], style={
-                    'padding': '10px',
-                    'margin-top': '10px',
-                    'text-align': 'center',
-                    'display': 'inline-flex',
-                    'align-items': 'center',
-                })
-            ])
+            return html.Div(
+                [
+                    html.Div(
+                        [
+                            html.I(
+                                className=icon_class,
+                                style={
+                                    "margin-right": "10px",
+                                    "font-size": "20px",
+                                    "color": icon_color,  # Only the icon is colored
+                                },
+                            ),
+                            html.Span(
+                                message,
+                                style={
+                                    "font-size": "14px",
+                                    "font-weight": "bold",
+                                    "color": "#000000",  # Message text is black
+                                },
+                            ),
+                        ],
+                        style={
+                            "padding": "10px",
+                            "margin-top": "10px",
+                            "text-align": "center",
+                            "display": "inline-flex",
+                            "align-items": "center",
+                        },
+                    )
+                ]
+            )
+
         if list_of_contents is not None:
             children = [
-                __handle_upload(c, n) for c, n in
-                zip(list_of_contents, list_of_names)]
+                __handle_upload(c, n) for c, n in zip(list_of_contents, list_of_names)
+            ]
             return children
+
     # Callback to save changes
     @app.callback(
         Output("output-edit-advanced-config", "children"),
@@ -220,35 +281,46 @@ def register_callbacks(app, project_root):
             __save_yaml(app.catalog_path, data_catalog_content)
 
             message = "Update successful!"
-            icon_color = '#37BE67'  # Green for success
-            icon_class = 'fa fa-check'  # Font Awesome check icon
+            icon_color = "#37BE67"  # Green for success
+            icon_class = "fa fa-check"  # Font Awesome check icon
 
         except Exception:
             message = "Edit failed! Please try again."
-            icon_color = '#F4405E'  # Red for failure
-            icon_class = 'fas fa-times'  # Font Awesome cross icon
+            icon_color = "#F4405E"  # Red for failure
+            icon_class = "fas fa-times"  # Font Awesome cross icon
 
-        return html.Div([
-            html.Div([
-                html.I(className=icon_class, style={
-                    'margin-right': '10px',
-                    'font-size': '20px',
-                    'color': icon_color  # Only the icon is colored
-                }),
-                html.Span(message, style={
-                    'font-size': '14px',
-                    'font-weight': 'bold',
-                    'color': '#000000'  # Message text is black
-                }),
-            ], style={
-                'padding': '10px',
-                'margin-top': '10px',
-                'margin-bottom': '20px',
-                'text-align': 'center',
-                'display': 'inline-flex',
-                'align-items': 'center',
-            })
-        ])
+        return html.Div(
+            [
+                html.Div(
+                    [
+                        html.I(
+                            className=icon_class,
+                            style={
+                                "margin-right": "10px",
+                                "font-size": "20px",
+                                "color": icon_color,  # Only the icon is colored
+                            },
+                        ),
+                        html.Span(
+                            message,
+                            style={
+                                "font-size": "14px",
+                                "font-weight": "bold",
+                                "color": "#000000",  # Message text is black
+                            },
+                        ),
+                    ],
+                    style={
+                        "padding": "10px",
+                        "margin-top": "10px",
+                        "margin-bottom": "20px",
+                        "text-align": "center",
+                        "display": "inline-flex",
+                        "align-items": "center",
+                    },
+                )
+            ]
+        )
 
     # Callback to enable and disable editing
     @app.callback(
@@ -277,16 +349,16 @@ def register_callbacks(app, project_root):
             return True, True, parameters, data_catalog
         # Default case (keep textareas disabled)
         return True, True, no_update, no_update
-    
 
     # Periodic callback to update data in `dcc.Store` when the file changes
     @app.callback(
-        Output('shared-data', 'data'),
-        Input('interval-component', 'n_intervals')
+        Output("shared-data", "data"), Input("interval-component", "n_intervals")
     )
     def update_shared_data(n_intervals):
-        shared_data={}
-        shared_data["predictions_base"] = load_predictions(type="base")
+        shared_data = {}
+        nowcast_series, header = load_predictions()
+        shared_data["nowcast_series"] = nowcast_series
+        shared_data["nowcast_header"] = header
         shared_data["cards"] = load_cards()
         shared_data["local_explanation"], _ = load_contributions()
         # shared_data["global_explanation"] = load_series(series_id=dropdown_options[0])
@@ -295,29 +367,63 @@ def register_callbacks(app, project_root):
             return shared_data
         raise PreventUpdate  # Prevent update if no new data
 
-
-    # Define a callback to update the data in the chart when the store data changes
-    @app.callback(
-        Output('sales-chart', 'data'),
-        Input('shared-data', 'data')  # Get the data from the store
-    )
-    def update_sales_chart(shared_data):
-        if shared_data is None:
-            raise PreventUpdate  # Do not update if no data
-
-        return shared_data["predictions_base"]  # Return the transformed data
-    
     # Define a callback to update the data in the chart when the store data changes
     @app.callback(
         [
-            Output('var-pred-value', 'children'),
-            Output('arima-pred-value', 'children'),
-            Output('conf-int-value', 'children'),
-            Output('var-pred-change', 'children'),
-            Output('arima-pred-change', 'children'),
-            Output('conf-int-change', 'children')
+            Output("nowcast-chart", "data"),
+            Output("nowcast-series-name", "children"),
+            Output("nowcast-pred-value", "children"),
+            Output("nowcast-pred-change", "children"),
+            Output("nowcast-annotation", "children"),
+            Output("global-explanation-legend-gray", "children"),
         ],
-        Input('shared-data', 'data')  # Get the data from the store
+        Input("shared-data", "data"),  # Get the data from the store
+    )
+    def update_nowcast_chart(shared_data):
+        if shared_data is None:
+            raise PreventUpdate  # Do not update if no data
+
+        value = float(shared_data["nowcast_header"]["Value"])
+        pct_diff = float(shared_data["nowcast_header"]["Since Last Month"])
+
+        diff_class, diff_icon = format_diff(pct_diff)
+
+        change_children = [
+            "Since Last Month",
+            diff_icon,
+            html.Span(
+                "{:.1%}".format(pct_diff).replace(".0%", "%"), className=diff_class
+            ),
+        ]
+
+        annot_children = [
+            shared_data["nowcast_header"]["Reference Period"],
+            ICON.GLOBE.ME1,
+            shared_data["nowcast_header"]["Region"],
+        ]
+
+        return (
+            shared_data["nowcast_series"],
+            f'{shared_data["nowcast_header"]["Series Name"]} ({shared_data["nowcast_header"]["Series Code"]})',
+            "{:,.1f}".format(value).rstrip(".0"),
+            change_children,
+            annot_children,
+            shared_data["nowcast_header"]["Series Code"]
+        )  # Return the transformed data
+
+    # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        [
+            Output("var-pred-value", "children"),
+            Output("arima-pred-value", "children"),
+            Output("conf-int-value", "children"),
+            Output("var-pred-change", "children"),
+            Output("arima-pred-change", "children"),
+            Output("conf-int-change", "children"),
+            Output("var-annotation", "children"),
+            Output("arima-annotation", "children"),
+        ],
+        Input("shared-data", "data"),  # Get the data from the store
     )
     def update_cards(shared_data):
         if not shared_data:
@@ -335,14 +441,6 @@ def register_callbacks(app, project_root):
         arima_diff = float(data["ARIMA"]["Since Last Month"])
         conf_int_diff = float(data["Confidence Interval"]["Since Last Month"])
 
-        # Function to format changes and icons
-        def format_diff(diff_value):
-            if diff_value > 0:
-                return "text-success fw-bolder", ICON.UP_ARROW.XS
-            elif diff_value < 0:
-                return "text-danger fw-bolder", ICON.DOWN_ARROW.XS
-            return "text fw-bolder", ICON.CHEVRON_UP_DOWN
-
         # Format VAR and ARIMA differences
         var_diff_class, var_diff_icon = format_diff(var_diff)
         arima_diff_class, arima_diff_icon = format_diff(arima_diff)
@@ -351,54 +449,85 @@ def register_callbacks(app, project_root):
         var_div_children = [
             "Since Last Month",
             var_diff_icon,
-            html.Span('{:.1%}'.format(var_diff).replace(".0%", "%"), className=var_diff_class)
+            html.Span(
+                "{:.1%}".format(var_diff).replace(".0%", "%"), className=var_diff_class
+            ),
         ]
         arima_div_children = [
             "Since Last Month",
             arima_diff_icon,
-            html.Span('{:.1%}'.format(arima_diff).replace(".0%", "%"), className=arima_diff_class)
+            html.Span(
+                "{:.1%}".format(arima_diff).replace(".0%", "%"),
+                className=arima_diff_class,
+            ),
+        ]
+
+        # Format children for VAR and ARIMA change
+        var_annot_children = [
+            # data["VAR"]["Reference Period"],
+            # ICON.GLOBE.ME1,
+            # data["VAR"]["Region"]
+            "Prediction Uncertainty: ",
+            "{:,.0f}k".format(float(data["VAR"]["Prediction Range"]) / 1000),
+        ]
+        arima_annot_children = [
+            # data["ARIMA"]["Reference Period"],
+            # ICON.GLOBE.ME1,
+            # data["ARIMA"]["Region"]
+            "Prediction Uncertainty: ",
+            "{:,.0f}k".format(float(data["ARIMA"]["Prediction Range"]) / 1000),
         ]
 
         # Return formatted data
         return (
-            '{:,.1f}'.format(var_value).rstrip('.0'),  # Format VAR value
-            '{:,.1f}'.format(arima_value).rstrip('.0'),  # Format ARIMA value
-            '{:,.0f}k'.format(conf_int_value / 1000),  # Format Confidence Interval value in thousands
+            "{:,.1f}".format(var_value).rstrip(".0"),  # Format VAR value
+            "{:,.1f}".format(arima_value).rstrip(".0"),  # Format ARIMA value
+            "{:,.0f}k".format(
+                conf_int_value / 1000
+            ),  # Format Confidence Interval value in thousands
             var_div_children,  # VAR change
             arima_div_children,  # ARIMA change
-            '{:,.1%}'.format(conf_int_diff).replace(".0%", "%"),  # Confidence interval change
+            "{:,.1%}".format(conf_int_diff).replace(
+                ".0%", "%"
+            ),  # Confidence interval change
+            var_annot_children,  # VAR annotation
+            arima_annot_children,  # ARIMA annotation
         )
 
     # Define a callback to update the data in the chart when the store data changes
     @app.callback(
-        Output('local-explanation-table', 'children'),
-        Input('shared-data', 'data')
+        Output("local-explanation-table", "children"), Input("shared-data", "data")
     )
     def update_local_explanation(shared_data):
         if not shared_data:
             raise PreventUpdate
-        
+
         local_explanation_data = shared_data["local_explanation"]
-        columns = [{'id': c, 'name': c} for c in local_explanation_data[0].keys()]
+        columns = [{"id": c, "name": c} for c in local_explanation_data[0].keys()]
 
         # Instantiate the PageVisitsTable with the updated data
         table = PageVisitsTable(
-                    data=local_explanation_data,
-                    columns=columns,
-                )
+            data=local_explanation_data,
+            columns=columns,
+        )
         return table
 
     # @app.callback(
     #     Output('global-explanation-chart', 'data'),
-    #     Input('shared-data', 'data'), 
+    #     Input('shared-data', 'data'),
     # )
     # def update_global_explanation(shared_data):
     #     if shared_data is None:
     #         raise PreventUpdate
     #     return shared_data["global_explanation"]
-    
+
     @app.callback(
-        Output("global-explanation-chart", "data"),
+        [
+            Output("global-explanation-chart", "data"),
+            Output("global-explanation-value", "children"),
+            Output("global-explanation-change", "children"),
+            Output("global-explanation-selected-option", "children"),
+        ],
         [Input(f"option-{option}", "n_clicks") for option in dropdown_options],
     )
     def update_selection(*args):
@@ -407,5 +536,37 @@ def register_callbacks(app, project_root):
             raise PreventUpdate
         clicked_id = ctx.triggered[0]["prop_id"].split(".")[0]
         selected_option = clicked_id.split("-")[1]
+
+        data = load_series(series_id=selected_option, diff=False)
+
+        value = float(data["series"][1][-1])
+        lag = float(data["series"][1][-2])
+        pct_diff = (value - lag) / lag
+
+        diff_class, diff_icon = format_diff(pct_diff)
+
+        # Format children for VAR and ARIMA change
+        children = [
+            "Since Last Month",
+            diff_icon,
+            html.Span(
+                "{:.1%}".format(pct_diff).replace(".0%", "%"), className=diff_class
+            ),
+        ]
+
         data = load_series(series_id=selected_option)
-        return data
+
+        return data, "{:,.1f}".format(value).rstrip(".0"), children, selected_option
+
+    # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        [Output("average-error-rate", "children"), Output("adjusted-r-squared", "children")], Input("shared-data", "data")
+    )
+    def update_evaluation(shared_data):
+        if not shared_data:
+            raise PreventUpdate
+
+        evaluation_measures = load_evaluation()
+
+        return "{:.2%}".format(evaluation_measures["Average Error Rate"]), "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%")
+    

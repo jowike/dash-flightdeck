@@ -28,21 +28,17 @@ def customers():
         html.Div([
             html.Div([
                 dcc.Store(id='shared-data'),
-                html.H2("Confidence Interval", className='h6 text-gray-400 mb-0'),
+                html.H2("Prediction Uncertainty", className='h6 text-gray-400 mb-0'),
                 html.H3("Not Available", className='fw-extrabold mb-2', id='conf-int-value')
             ], className='d-none d-sm-block'),
-            html.Small([
-                "Feb 1 - Apr 1,",
-                ICON.GLOBE.ME1,
-                "USA"
-            ], className='d-flex align-items-center text-gray-500'),
+            html.Small("Residual Standard Deviation", className='text-gray-500'),
             html.Div([
                 html.Div([
                     "Since last month",
                     ICON.CHEVRON_UP_DOWN,
                     html.Span("", className='text fw-bolder', id='conf-int-change')
                 ])
-            ], className='small d-flex mt-1')
+            ], className='small d-flex mt-1'),
         ], className='col-12 col-xl-7 px-xl-0')
     ])
 
@@ -65,17 +61,17 @@ def revenue():
                 html.H3("Not Available", className='fw-extrabold mb-2', id='var-pred-value'),
             ], className='d-none d-sm-block'),
             html.Small([
-                "Feb 1 - Apr 1,",
-                ICON.GLOBE.ME1,
-                "GER"
-            ], className='d-flex align-items-center text-gray-500'),
+                # "Feb 1 - Apr 1,"
+                # ICON.GLOBE.ME1,
+                # "USA"
+            ], className='d-flex align-items-center text-gray-500', id='var-annotation'),
             html.Div([
                 html.Div([
                     "Since last month",
                     ICON.CHEVRON_UP_DOWN,
                     html.Span("", className='text-danger fw-bolder')
                 ], id='var-pred-change')
-            ], className='small d-flex mt-1')
+            ], className='small d-flex mt-1'),
         ], className='col-12 col-xl-7 px-xl-0')
     ])
 
@@ -97,7 +93,11 @@ def bounceRate():
                 html.H2("ARIMA", className='h6 text-gray-400 mb-0'),
                 html.H3("Not Available", className='fw-extrabold mb-2', id='arima-pred-value'),
             ], className='d-none d-sm-block'),
-            html.Small("Feb 1 - Apr 1", className='text-gray-500'),
+            html.Small([
+                # "Aug 1 - Aug 31,",
+                # ICON.GLOBE.ME1,
+                # "USA"
+            ], className='d-flex align-items-center text-gray-500', id='arima-annotation'),
             html.Div([
                 html.Div([
                     "Since last month",

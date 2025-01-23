@@ -15,7 +15,7 @@ def acquisition():
                        ], className='icon-shape icon-sm icon-shape-danger rounded me-3'),
                         html.Div([
                             html.Label("Average Error Rate", className='mb-0'),
-                            html.H4("3.50%", className='mb-0')
+                            html.H4("Not Available", className='mb-0', id='average-error-rate')
                         ], className='d-block')
                     ], className='d-flex align-items-center me-5'),
                     html.Div([
@@ -24,7 +24,7 @@ def acquisition():
                         ], className='icon-shape icon-sm icon-shape-purple rounded me-3'),
                         html.Div([
                             html.Label("Adjusted R-Squared", className='mb-0'),
-                            html.H4("95,67%", className='mb-0')
+                            html.H4("Not Available", className='mb-0', id='adjusted-r-squared')
                         ], className='d-block')
                     ], className='d-flex align-items-center pt-3')
                 ], className='d-block')

@@ -30,7 +30,7 @@ layout = html.Main(
     [
         dcc.Interval(
             id='interval-component',
-            interval=5000,  # Check for file updates every 5 seconds
+            interval=1000,  # Check for file updates every second
             n_intervals=0
         ),
         # Store for shared data

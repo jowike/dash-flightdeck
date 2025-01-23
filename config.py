@@ -3,33 +3,52 @@ import yaml
 from dateutil import relativedelta
 import pandas as pd
 from openpyxl import load_workbook
+from pages.icons.hero import ICON
 
 def __load_yaml(file_path):
     with open(file_path, "r") as file:
         return file.read()
+    
+def format_diff(diff_value):
+    if diff_value > 0:
+        return "text-success fw-bolder", ICON.UP_ARROW.XS
+    elif diff_value < 0:
+        return "text-danger fw-bolder", ICON.DOWN_ARROW.XS
+    return "text fw-bolder", ICON.CHEVRON_UP_DOWN
+
 
 def load_predictions(
-        type: str,
         file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
+        # type: str,
         ):
 
     if os.path.exists(file_path):
         wb = load_workbook(file_path, read_only=True)
-        if type == "base":
-            assert "Nowcast Browser – Base" in wb.sheetnames
-            df = pd.read_excel(file_path, sheet_name="Nowcast Browser – Base")
-        elif type == "adj":
-            assert "Nowcast Browser – Adjusted" in wb.sheetnames
-            df = pd.read_excel(file_path, sheet_name="Nowcast Browser – Adjusted")
-        else: raise ValueError("Invalid type. Please choose 'base' or 'adj'.")
+        assert "Nowcast Browser – Base" in wb.sheetnames and "Nowcast Browser – Header" in wb.sheetnames
+        df = pd.read_excel(file_path, sheet_name="Nowcast Browser – Base")
+
+        topBar = pd.read_excel(file_path, sheet_name="Nowcast Browser – Header")
+
+        header = {}
+        for k, v in zip(topBar["Banner"], topBar["Value"]):
+            header[k] = v
+
+        # if type == "base":
+        #     assert "Nowcast Browser – Base" in wb.sheetnames
+        #     df = pd.read_excel(file_path, sheet_name="Nowcast Browser – Base")
+        # elif type == "adj":
+        #     assert "Nowcast Browser – Adjusted" in wb.sheetnames
+        #     df = pd.read_excel(file_path, sheet_name="Nowcast Browser – Adjusted")
+        # else: raise ValueError("Invalid type. Please choose 'base' or 'adj'.")
 
         df["Reference Date"] = df["Reference Date"].astype(str).replace(r"-\d{2}$", "", regex=True)
 
         return {
             "labels": [label if index % 3 == 0 else "" for index, label in enumerate(df["Reference Date"])],
             "series": [df[c].tolist() for c in df.columns if c != "Reference Date"]
-        }
-    return None
+        }, header
+    return None, header
+
 
 def load_cards(
         file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
@@ -45,6 +64,9 @@ def load_cards(
             d[r[1]["Card"]] = {
                 "Value": r[1]["Value"],
                 "Since Last Month": r[1]["Since Last Month"],
+                # "Reference Period": r[1]["Reference Period"],
+                # "Region": r[1]["Region"],
+                "Prediction Range": r[1]["Prediction Range"],
             }
         return d
     return None
@@ -68,7 +90,7 @@ def load_contributions(
         return df.drop(columns=['Series ID']).to_dict('records'), df["Series ID"].tolist()
     return None
 
-def load_series(series_id=None):
+def load_series(series_id=None, diff=True):
     def load_yaml(filepath):
         with open(filepath, 'r') as file:
             return yaml.load(file, Loader=yaml.FullLoader)
@@ -87,8 +109,9 @@ def load_series(series_id=None):
     _, series_ids = load_contributions()
     colnames = [ref_date_col, y_code] + series_ids
 
-    for c in colnames[1:]:
-        df[c] = df[c].pct_change()
+    if diff:
+        for c in colnames[1:]:
+            df[c] = df[c].pct_change()
 
     series = df.loc[df[ref_date_col].between(ref_datetime-relativedelta.relativedelta(months=6), ref_datetime), colnames]
     series["dt"] = pd.to_datetime(series[ref_date_col]).dt.strftime('%b')
@@ -99,6 +122,21 @@ def load_series(series_id=None):
         "labels": [month for month in series["dt"]],
         "series": [series[c].tolist() for c in [y_code, series_id]]
     }
+
+def load_evaluation(
+        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
+        # type: str,
+        ):
+    items = {}
+    if os.path.exists(file_path):
+        wb = load_workbook(file_path, read_only=True)
+        assert "Model Assessment" in wb.sheetnames
+        df = pd.read_excel(file_path, sheet_name="Model Assessment")
+
+        for k, v in zip(df["Measure"], df["Value"]):
+            items[k] = v
+    return items
+
 
 # Global variables to store ...
 # pipeline_status = "Not started"
