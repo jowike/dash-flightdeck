@@ -116,7 +116,11 @@ def load_series(series_id=None, diff=True):
     series = df.loc[df[ref_date_col].between(ref_datetime-relativedelta.relativedelta(months=6), ref_datetime), colnames]
     series["dt"] = pd.to_datetime(series[ref_date_col]).dt.strftime('%b')
 
-    # if series_id is None: series_id = series_ids[1]
+    if series_id is None:
+        return {
+            "labels": [month for month in series["dt"]],
+            "series": series[y_code].tolist()
+        }
 
     return {
         "labels": [month for month in series["dt"]],

@@ -19,12 +19,17 @@ def infoControl():
             # Info Icon
             html.Span(
                 [
-                    html.I(className="fas fa-info-circle me-2"),  # Replace with a proper icon (e.g., FontAwesome)
+                    html.I(className="fas fa-info-circle me-2", style={"margin-right": "10px", "color": "black"}),  # Replace with a proper icon (e.g., FontAwesome)
                     "Read Me ~ Your Guidebook",
                 ],
                 className="input-group-text",
                 id="info-icon",  # ID for triggering modal
-                style={"cursor": "pointer"},
+                style={
+                    "cursor": "pointer",
+                    "padding-left": "15px",  # Add space on the left side of the button
+                    "padding-right": "25px",  # Add space on the right side of the button
+                    "color": "black"
+                },
             ),
             # Modal for Guidelines
             dbc.Modal(

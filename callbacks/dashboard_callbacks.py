@@ -35,7 +35,7 @@ from dash_spa.components.button_container_aoi import ButtonContainerAIO
 from pages.icons.hero import ICON
 
 from dash_spa.components.table import SearchAIO, TableContext
-
+import dash_bootstrap_components as dbc
 
 PageVisitsTable = TableContext.Provider(id="page_visits_table")(PageVisitsTable)
 
@@ -357,10 +357,12 @@ def register_callbacks(app, project_root):
     def update_shared_data(n_intervals):
         shared_data = {}
         nowcast_series, header = load_predictions()
+        contributions, dropdown_options = load_contributions()
+
         shared_data["nowcast_series"] = nowcast_series
         shared_data["nowcast_header"] = header
         shared_data["cards"] = load_cards()
-        shared_data["local_explanation"], _ = load_contributions()
+        shared_data["local_explanation"], shared_data["dropdown_options"] = contributions, dropdown_options
         # shared_data["global_explanation"] = load_series(series_id=dropdown_options[0])
 
         if all(shared_data.values()):
@@ -521,6 +523,36 @@ def register_callbacks(app, project_root):
     #         raise PreventUpdate
     #     return shared_data["global_explanation"]
 
+    # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        [Output("average-error-rate", "children"), Output("adjusted-r-squared", "children")], Input("shared-data", "data")
+    )
+    def update_evaluation(shared_data):
+        if not shared_data:
+            raise PreventUpdate
+
+        evaluation_measures = load_evaluation()
+
+        return "{:.2%}".format(evaluation_measures["Average Error Rate"]), "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%")
+    
+    @app.callback(
+        Output("dropdown-menu", "children"),
+        [Input("shared-data", "data"), Input("dropdown-menu", "children"), Input("global-explanation-legend-gray", "children")]
+    )
+    def update_dropdown_options(shared_data, current_options, series_code):
+        if not shared_data:
+            raise PreventUpdate
+        
+        current_options = [d['props']['children'] for d in current_options]
+        if (set(current_options) == set(shared_data["dropdown_options"])) and (shared_data["nowcast_header"]["Series Code"] == series_code):
+            raise PreventUpdate
+
+        children = [
+            dbc.DropdownMenuItem(option, id=f"option-{option}")
+            for option in shared_data["dropdown_options"]
+            ]
+        return children
+
     @app.callback(
         [
             Output("global-explanation-chart", "data"),
@@ -557,16 +589,3 @@ def register_callbacks(app, project_root):
         data = load_series(series_id=selected_option)
 
         return data, "{:,.1f}".format(value).rstrip(".0"), children, selected_option
-
-    # Define a callback to update the data in the chart when the store data changes
-    @app.callback(
-        [Output("average-error-rate", "children"), Output("adjusted-r-squared", "children")], Input("shared-data", "data")
-    )
-    def update_evaluation(shared_data):
-        if not shared_data:
-            raise PreventUpdate
-
-        evaluation_measures = load_evaluation()
-
-        return "{:.2%}".format(evaluation_measures["Average Error Rate"]), "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%")
-    

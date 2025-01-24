@@ -28,32 +28,38 @@ options = {
 }
 
 chartType = "Bar"
-_, dropdown_options = load_contributions()
-_, header = load_predictions()
+dropdown_options = []
+target_variable = ""
+selected_option = ""
+value = ""
+children=[]
+data = {}
+# _, dropdown_options = load_contributions()
+# _, header = load_predictions()
 
-try:
-    selected_option = dropdown_options[0]
-    target_variable = header["Series Code"]
+# try:
+#     selected_option = dropdown_options[0]
+#     target_variable = header["Series Code"]
 
-    data = load_series(series_id=selected_option, diff=False)
+#     data = load_series(series_id=selected_option, diff=False)
 
-    value = float(data["series"][1][-1])
-    lag = float(data["series"][1][-2])
-    pct_diff = (value - lag) / lag
+#     value = float(data["series"][1][-1])
+#     lag = float(data["series"][1][-2])
+#     pct_diff = (value - lag) / lag
 
-    diff_class, diff_icon = format_diff(pct_diff)
+#     diff_class, diff_icon = format_diff(pct_diff)
 
-    # Format children for VAR and ARIMA change
-    children = [
-        "Since Last Month",
-        diff_icon,
-        html.Span('{:.1%}'.format(pct_diff).replace(".0%", "%"), className=diff_class)
-    ]
-    value = '{:,.1f}'.format(value).rstrip('.0')
+#     # Format children for VAR and ARIMA change
+#     children = [
+#         "Since Last Month",
+#         diff_icon,
+#         html.Span('{:.1%}'.format(pct_diff).replace(".0%", "%"), className=diff_class)
+#     ]
+#     value = '{:,.1f}'.format(value).rstrip('.0')
 
-    data = load_series(selected_option)
-except Exception:
-    data = {}
+#     data = load_series(selected_option)
+# except Exception:
+#     data = {}
 
 def totalOrdersBarChart():
     dropdown = html.Div(
@@ -63,8 +69,8 @@ def totalOrdersBarChart():
                         toggleClassName="btn btn-white dropdown-toggle d-flex align-items-center",
                         toggle_style={"border": "1px solid #ced4da", "borderRadius": "4px"},
                         children=[
-                            dbc.DropdownMenuItem(option, id=f"option-{option}")
-                            for option in dropdown_options
+                            # dbc.DropdownMenuItem(option, id=f"option-{option}")
+                            # for option in dropdown_options
                         ],
                         id="dropdown-menu",
                         className="dropdown-menu-end dropdown-menu-xs",  # Menu styling
