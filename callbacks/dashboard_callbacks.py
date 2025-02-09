@@ -378,6 +378,8 @@ def register_callbacks(app, project_root):
             Output("nowcast-pred-change", "children"),
             Output("nowcast-annotation", "children"),
             Output("global-explanation-legend-gray", "children"),
+            Output("nowcast-as-of-date", "children"),
+            Output("data-as-of-date", "children"),
         ],
         Input("shared-data", "data"),  # Get the data from the store
     )
@@ -403,6 +405,8 @@ def register_callbacks(app, project_root):
             ICON.GLOBE.ME1,
             shared_data["nowcast_header"]["Region"],
         ]
+        data_watermark = f'Data as of Date: {pd.to_datetime(shared_data["nowcast_header"]["Data as of"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
+        nowcast_watermark = f'Last Run Watermark: {pd.to_datetime(shared_data["nowcast_header"]["Last Run Watermark"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
 
         return (
             shared_data["nowcast_series"],
@@ -410,7 +414,9 @@ def register_callbacks(app, project_root):
             "{:,.1f}".format(value).rstrip(".0"),
             change_children,
             annot_children,
-            shared_data["nowcast_header"]["Series Code"]
+            shared_data["nowcast_header"]["Series Code"],
+            data_watermark,
+            nowcast_watermark
         )  # Return the transformed data
 
     # Define a callback to update the data in the chart when the store data changes

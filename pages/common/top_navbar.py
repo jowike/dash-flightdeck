@@ -20,7 +20,7 @@ def infoControl():
             html.Span(
                 [
                     html.I(className="fas fa-info-circle me-2 text-gray-800", style={"margin-right": "10px"}),  # Replace with a proper icon (e.g., FontAwesome)
-                    "Read Me ~ Your Guidebook",
+                    "Read Me",
                 ],
                 className="input-group-text text-gray-800",
                 id="info-icon",  # ID for triggering modal
@@ -34,7 +34,7 @@ def infoControl():
             # Modal for Guidelines
             dbc.Modal(
                 [
-                    dbc.ModalHeader(dbc.ModalTitle("Guidelines")),
+                    dbc.ModalHeader(dbc.ModalTitle("Your Guidebook")),
                     dbc.ModalBody(
                         [
                             html.P("Guideline 1: Lorem ipsum dolor sit amet."),

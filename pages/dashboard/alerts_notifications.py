@@ -34,7 +34,7 @@ def alertsNotifications():
                 html.Div([
                     html.H3("Data Flow", className="h6 mb-1"),
                     html.P("Get the most recent update watermark from the data repository.", className="small pe-4"),
-                    html.P("Data as of Date: 4/5/2024 7:15 PM CET", className="small pe-4")
+                    html.P("Data as of Date: ", className="small pe-4", id="data-as-of-date"),
                 ]),
             ], className="list-group-item d-flex align-items-center justify-content-between px-0 border-bottom"),
             html.Li([
@@ -55,7 +55,7 @@ def alertsNotifications():
                         className="g-0 w-100"  # Removes gutters and ensures full-width row
                     ),
                     html.P("Monitor the real-time status of the model refinery.", className="small pe-4"),
-                    html.P("Last Run Date: 4/5/2024 7:15 PM CET", className="small pe-4"),
+                    html.P("Last Run Watermark: ", className="small pe-4", id="nowcast-as-of-date"),
                     html.P(id="pipeline-status", className="pipeline-status small pe-4"),
                     html.P(id="pipeline-viz", className="pipeline-status small pe-4"),
                     # html.Div(id="pipeline-status", className="pipeline-status", style={"margin-top": "20px"})

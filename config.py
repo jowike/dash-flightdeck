@@ -72,6 +72,7 @@ def load_cards(
     return None
 
 
+
 def load_contributions(
         file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
         ):
@@ -82,13 +83,17 @@ def load_contributions(
         df = pd.read_excel(file_path, sheet_name="Local Explanation")
 
         df['Release Date'] = pd.to_datetime(df['Release Date']).dt.strftime('%b %d')
+        df["Data Series"] = df["Data Series"] + " (" + df["Series ID"] + ")"
 
         # Prepare the ordered dictionary
 
         df[''] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
+        df["Impact"] = df["Impact"].map(lambda x: f"{x:.2%}")
         
         return df.drop(columns=['Series ID']).to_dict('records'), df["Series ID"].tolist()
     return None
+
+
 
 def load_series(series_id=None, diff=True):
     def load_yaml(filepath):
