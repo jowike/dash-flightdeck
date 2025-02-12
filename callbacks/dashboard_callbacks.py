@@ -396,7 +396,7 @@ def register_callbacks(app, project_root):
             "Since Last Month",
             diff_icon,
             html.Span(
-                "{:.1%}".format(pct_diff).replace(".0%", "%"), className=diff_class
+                "{:.2%}".format(pct_diff).replace(".0%", "%"), className=diff_class
             ),
         ]
 
@@ -425,6 +425,7 @@ def register_callbacks(app, project_root):
             Output("var-pred-value", "children"),
             Output("arima-pred-value", "children"),
             Output("conf-int-value", "children"),
+            Output("conf-int-unit", "children"),
             Output("var-pred-change", "children"),
             Output("arima-pred-change", "children"),
             Output("conf-int-change", "children"),
@@ -458,14 +459,14 @@ def register_callbacks(app, project_root):
             "Since Last Month",
             var_diff_icon,
             html.Span(
-                "{:.1%}".format(var_diff).replace(".0%", "%"), className=var_diff_class
+                "{:.2%}".format(var_diff).replace(".0%", "%"), className=var_diff_class
             ),
         ]
         arima_div_children = [
             "Since Last Month",
             arima_diff_icon,
             html.Span(
-                "{:.1%}".format(arima_diff).replace(".0%", "%"),
+                "{:.2%}".format(arima_diff).replace(".0%", "%"),
                 className=arima_diff_class,
             ),
         ]
@@ -476,23 +477,24 @@ def register_callbacks(app, project_root):
             # ICON.GLOBE.ME1,
             # data["VAR"]["Region"]
             "Prediction Uncertainty: ",
-            "{:,.0f}k".format(float(data["VAR"]["Prediction Range"]) / 1000),
+            "{:,.0f}".format(float(data["VAR"]["Prediction Range"])),
         ]
         arima_annot_children = [
             # data["ARIMA"]["Reference Period"],
             # ICON.GLOBE.ME1,
             # data["ARIMA"]["Region"]
             "Prediction Uncertainty: ",
-            "{:,.0f}k".format(float(data["ARIMA"]["Prediction Range"]) / 1000),
+            "{:,.0f}".format(float(data["ARIMA"]["Prediction Range"])),
         ]
 
         # Return formatted data
         return (
             "{:,.1f}".format(var_value).rstrip(".0"),  # Format VAR value
             "{:,.1f}".format(arima_value).rstrip(".0"),  # Format ARIMA value
-            "{:,.0f}k".format(
-                conf_int_value / 1000
+            "{:,.1f}".format(
+                conf_int_value
             ),  # Format Confidence Interval value in thousands
+            shared_data["nowcast_header"]["Unit"],
             var_div_children,  # VAR change
             arima_div_children,  # ARIMA change
             "{:,.1%}".format(conf_int_diff).replace(
@@ -588,7 +590,7 @@ def register_callbacks(app, project_root):
             "Since Last Month",
             diff_icon,
             html.Span(
-                "{:.1%}".format(pct_diff).replace(".0%", "%"), className=diff_class
+                "{:.2%}".format(pct_diff).replace(".0%", "%"), className=diff_class
             ),
         ]
 

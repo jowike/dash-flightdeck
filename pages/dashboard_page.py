@@ -12,6 +12,7 @@ from .dashboard import (
     acquisition,
     newTasksButton,
     runButton,
+    tableAction,
     alertsNotifications,
     modal,
     upload_modal
@@ -36,7 +37,7 @@ layout = html.Main(
         # Store for shared data
         dcc.Store(id='shared-data'),  # Store the shared data here
         topNavBar(),
-        buttonBar(newTasksButton(), runButton()),
+        buttonBar(newTasksButton(), [runButton(), tableAction()]),
         modal(parameters=parameters, data_catalog=data_catalog),
         upload_modal(),
         html.Div([salesChart(), customers(), revenue(), bounceRate()], className="row"),

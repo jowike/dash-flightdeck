@@ -31,7 +31,7 @@ def customers():
                 html.H2("Prediction Uncertainty", className='h6 text-gray-400 mb-0'),
                 html.H3("Not Available", className='fw-extrabold mb-2', id='conf-int-value')
             ], className='d-none d-sm-block'),
-            html.Small("Residual Standard Deviation", className='text-gray-500'),
+            html.Small("Residual Standard Deviation", className='text-gray-500', id='conf-int-unit'),
             html.Div([
                 html.Div([
                     "Since last month",

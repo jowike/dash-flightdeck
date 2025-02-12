@@ -18,7 +18,7 @@ def format_diff(diff_value):
 
 
 def load_predictions(
-        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
+        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_data_model.xlsx",
         # type: str,
         ):
 
@@ -51,7 +51,7 @@ def load_predictions(
 
 
 def load_cards(
-        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
+        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_data_model.xlsx",
         ):
     if os.path.exists(file_path):
         wb = load_workbook(file_path, read_only=True)
@@ -74,7 +74,7 @@ def load_cards(
 
 
 def load_contributions(
-        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
+        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_data_model.xlsx",
         ):
 
     if os.path.exists(file_path):
@@ -87,10 +87,10 @@ def load_contributions(
 
         # Prepare the ordered dictionary
 
-        df[''] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
-        df["Impact"] = df["Impact"].map(lambda x: f"{x:.2%}")
+        df['Change'] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
+        # df["Impact"] = df["Impact"].map(lambda x: f"{x:.2%}")
         
-        return df.drop(columns=['Series ID']).to_dict('records'), df["Series ID"].tolist()
+        return df[['Release Date', "Data Series", "Impact", "Change"]].to_dict('records'), df["Series ID"].tolist()
     return None
 
 
@@ -133,7 +133,7 @@ def load_series(series_id=None, diff=True):
     }
 
 def load_evaluation(
-        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_input_report.xlsx",
+        file_path:str="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/data/08_reporting/dash_data_model.xlsx",
         # type: str,
         ):
     items = {}

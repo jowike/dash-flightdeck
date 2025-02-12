@@ -1,29 +1,5 @@
 from dash import html, dcc
-from dash_spa.components.dropdown_aio import DropdownAIO
 import dash_bootstrap_components as dbc         # pip install dash_bootstrap_components
-
-def tableAction():
-
-    button = DropdownAIO.Button([
-        html.Span(html.Span(className='fas fa-ellipsis-h icon-dark'), className='icon icon-sm'),
-        html.Span("Toggle Dropdown", className='visually-hidden')
-    ], className='btn btn-link text-dark dropdown-toggle-split m-0 p-0')
-
-    # Action column dropdown bottom-left. Ripped from the Volt transactions table using Firefox debug tools
-
-    style={
-        "position": "absolute",
-        "inset": "0px 0px auto auto",
-        "margin": "0px",
-        "transform": "translate3d(0px, 25.3333px, 0px)"
-        }
-
-    container = html.Div([
-        html.A([html.Span(className='fas fa-project-diagram me-2'), "View Details" ], id="start-viz-button", n_clicks=0, className='dropdown-item rounded-top'),
-        html.A([html.Span(className='fas fa-stop me-2'), "Stop" ], id="stop-viz-button", n_clicks=0, className='dropdown-item rounded-bottom')
-    ], className='dropdown-menu py-0', style=style)
-
-    return html.Div(DropdownAIO(button, container, id='manage-kedro-viz-button'), className='btn-group')
 
 
 def alertsNotifications():
@@ -46,11 +22,11 @@ def alertsNotifications():
                                 width="auto",  # Ensures the title takes up only the necessary space
                                 className="d-flex align-items-center"  # Vertically aligns the title
                             ),
-                            dbc.Col(
-                                tableAction(), 
-                                width="auto",  # Ensures the action takes up only the necessary space
-                                className="d-flex justify-content-end align-items-center ms-auto"  # Pushes to the far right
-                            ),
+                            # dbc.Col(
+                            #     tableAction(), 
+                            #     width="auto",  # Ensures the action takes up only the necessary space
+                            #     className="d-flex justify-content-end align-items-center ms-auto"  # Pushes to the far right
+                            # ),
                         ],
                         className="g-0 w-100"  # Removes gutters and ensures full-width row
                     ),

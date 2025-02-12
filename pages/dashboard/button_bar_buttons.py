@@ -1,4 +1,5 @@
 from dash_spa.components.dropdown_button_aoi import DropdownButtonAIO, dropdownLink
+from dash_spa.components.dropdown_aio import DropdownAIO
 
 from dash import html
 from ..icons.hero import ICON
@@ -15,10 +16,37 @@ def newTasksButton():
 def runButton():
     return  html.Button([
         ICON.PLAY,
-        html.Span("Run", className='me-2')
+        html.Span("Kedro Run", className='me-2')
     ],
     type='button',
     id="run-pipeline-button",
     n_clicks=0,
     className='btn btn-gray-800 d-inline-flex align-items-center me-2',
     )
+
+def tableAction():
+
+    # button = DropdownAIO.Button([
+    #     html.Span(html.Span(className='fas fa-ellipsis-h icon-dark'), className='icon icon-sm'),
+    #     html.Span("Toggle Dropdown", className='visually-hidden')
+    # ], className='btn btn-link text-dark dropdown-toggle-split m-0 p-0')
+    button = DropdownAIO.Button([
+        html.Span("✨", className='me-2'),  # Icon with spacing
+        html.Span("Kedro Viz")
+    ], className='btn btn-gray-800 d-inline-flex align-items-center me-2')
+
+    # Action column dropdown bottom-left. Ripped from the Volt transactions table using Firefox debug tools
+
+    style={
+        "position": "absolute",
+        "inset": "0px 0px auto auto",
+        # "margin": "0px",
+        # "transform": "translate3d(0px, 25.3333px, 0px)"
+        }
+
+    container = html.Div([
+        html.A([html.Span(className='fas fa-project-diagram me-2'), "View Details" ], id="start-viz-button", n_clicks=0, className='dropdown-item rounded-top'),
+        html.A([html.Span(className='fas fa-stop me-2'), "Stop" ], id="stop-viz-button", n_clicks=0, className='dropdown-item rounded-bottom')
+    ], className='dropdown-menu py-0', style=style)
+
+    return html.Div(DropdownAIO(button, container, id='manage-kedro-viz-button'), className='btn-group')
