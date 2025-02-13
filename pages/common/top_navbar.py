@@ -19,8 +19,8 @@ def infoControl():
             # Info Icon
             html.Span(
                 [
-                    html.I(ICON.INFO, style={"margin-left": "5px", "margin-right": "10px", "position": "relative", "top": "-2px"}),  # Align icon to the top
-                    html.Span("Read Me", style={"margin-right": "10px"})
+                    html.I(ICON.INFO, style={"margin-left": "7.5px", "margin-right": "10px", "position": "relative", "top": "-1px"}),  # Align icon to the top
+                    html.Span("Read Me", style={"margin-right": "7.5px"})
                 ],
                 className="input-group-text text-gray-800 me-10",
                 id="info-icon",  # ID for triggering modal

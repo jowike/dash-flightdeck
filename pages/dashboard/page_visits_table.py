@@ -27,14 +27,14 @@ class PageVisitsTable(TableAIO):
 
         return  html.Tr([
             html.Th(name, className='text-gray-900', scope='row'),
-            html.Td(views, className='fw-bolder text-gray-500'),
+            html.Td(views, className='text-gray-900'),
             # html.Td(value, className='fw-bolder text-gray-500'),
             html.Td([
                 html.Div([
                     icon,
                     rate
                 ], className='d-flex')
-            ], className='fw-bolder text-gray-500')
+            ], className='text-gray-900')
         ])
 
 
@@ -42,7 +42,7 @@ class PageVisitsTable(TableAIO):
 def pageVisitsTable():
     table = PageVisitsTable(
         data=data,  # This will be populated dynamically via callback
-        columns=[{'id': c, 'name': c} for c in data[0].keys()],
+        columns=[{'id': c, 'name': c} for c in ['Release Date', 'Data Series', 'Impact', '']],
         )
 
     return html.Div([

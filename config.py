@@ -87,10 +87,10 @@ def load_contributions(
 
         # Prepare the ordered dictionary
 
-        df['Change'] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
+        df[''] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
         # df["Impact"] = df["Impact"].map(lambda x: f"{x:.2%}")
         
-        return df[['Release Date', "Data Series", "Impact", "Change"]].to_dict('records'), df["Series ID"].tolist()
+        return df[['Release Date', "Data Series", "Impact", ""]].to_dict('records'), df["Series ID"].tolist()
     return None
 
 

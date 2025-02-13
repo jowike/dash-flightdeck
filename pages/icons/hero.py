@@ -70,7 +70,7 @@ class ICON:
         ], className='icon icon-xs me-2', fill='currentColor', viewBox='0 0 20 20', xmlns='http://www.w3.org/2000/svg')
 
     FLAG = Svg([
-            Path(fillRule='evenodd', d='M64 32C64 14.3 49.7 0 32 0S0 14.3 0 32L0 64 0 368 0 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-128 64.3-16.1c41.1-10.3 84.6-5.5 122.5 13.4c44.2 22.1 95.5 24.8 141.7 7.4l34.7-13c12.5-4.7 20.8-16.6 20.8-30l0-247.7c0-23-24.2-38-44.8-27.7l-9.6 4.8c-46.3 23.2-100.8 23.2-147.1 0c-35.1-17.6-75.4-22-113.5-12.5L64 48l0-16z', clipRule='evenodd')
+            Path(fillRule='evenodd', d='M91.7 96C106.3 86.8 116 70.5 116 52C116 23.3 92.7 0 64 0S12 23.3 12 52c0 16.7 7.8 31.5 20 41l0 3 0 352 0 64 64 0 0-64 373.6 0c14.6 0 26.4-11.8 26.4-26.4c0-3.7-.8-7.3-2.3-10.7L432 272l61.7-138.9c1.5-3.4 2.3-7 2.3-10.7c0-14.6-11.8-26.4-26.4-26.4L91.7 96z', clipRule='evenodd')
         ], className='icon', fill='currentColor', viewBox='0 0 448 512', xmlns='http://www.w3.org/2000/svg', style={'width': '18px', 'height': '18px'})
 
     CHART_PIE = Svg([
@@ -218,8 +218,8 @@ class ICON:
         ], className='icon icon-xs', fill='currentColor', viewBox='0 0 320 512', xmlns='http://www.w3.org/2000/svg')
 
     INFO = Svg([
-            Path(fillRule='evenodd', d='M48 80a48 48 0 1 1 96 0A48 48 0 1 1 48 80zM0 224c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 224 32 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 512c-17.7 0-32-14.3-32-32s14.3-32 32-32l32 0 0-192-32 0c-17.7 0-32-14.3-32-32z', clipRule='evenodd')
-        ], className='icon icon-xs', fill='currentColor', viewBox='0 0 192 512', xmlns='http://www.w3.org/2000/svg', style={'width': '14px', 'height': '14px'})
+            Path(fillRule='evenodd', d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z', clipRule='evenodd')
+        ], className='icon icon-xs', fill='currentColor', viewBox='0 0 512 512', xmlns='http://www.w3.org/2000/svg', style={'width': '14px', 'height': '14px'})
 
     SEARCH = Svg([
             Path(fillRule='evenodd', d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z', clipRule='evenodd')
