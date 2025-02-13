@@ -15,7 +15,7 @@ def newTasksButton():
 
 def runButton():
     return  html.Button([
-        ICON.PLAY,
+        html.Span(ICON.DIAMOND, className='me-2'),  # Icon with spacing
         html.Span("Kedro Run", className='me-2')
     ],
     type='button',
@@ -32,6 +32,7 @@ def tableAction():
     # ], className='btn btn-link text-dark dropdown-toggle-split m-0 p-0')
     button = DropdownAIO.Button([
         html.Span("✨", className='me-2'),  # Icon with spacing
+        # ICON.SPARKLES,
         html.Span("Kedro Viz")
     ], className='btn btn-gray-800 d-inline-flex align-items-center me-2')
 

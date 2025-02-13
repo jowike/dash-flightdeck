@@ -11,7 +11,7 @@ def acquisition():
                 html.Div([
                     html.Div([
                         html.Div([
-                            ICON.CHART
+                            ICON.FLAG
                        ], className='icon-shape icon-sm icon-shape-danger rounded me-3'),
                         html.Div([
                             html.Label("Average Error Rate", className='mb-0'),
@@ -20,7 +20,7 @@ def acquisition():
                     ], className='d-flex align-items-center me-5'),
                     html.Div([
                         html.Div([
-                            ICON.BARCHART
+                            ICON.FIRE.ME2
                         ], className='icon-shape icon-sm icon-shape-purple rounded me-3'),
                         html.Div([
                             html.Label("Adjusted R-Squared", className='mb-0'),

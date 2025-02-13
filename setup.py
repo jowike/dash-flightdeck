@@ -20,7 +20,9 @@ def install_packages():
         "python3 /Users/ejowik001/Desktop/Github/mifs/setup.py install",  # TODO: git clone + git checkout
         "pip install numpy==1.26.4",
         "pip install -U kaleido",
-        "pip install dash-uploader"
+        "pip install dash-uploader",
+        "pip install dash-spa",
+        "pip install xlsxwriter"
     ]
     for cmd in commands:
         run_command(cmd)

@@ -18,13 +18,13 @@ def customers():
         dcc.Store(id='shared-data'),
         html.Div([
             html.Div([
-                ICON.CHART
-            ], className='icon-shape icon-shape-primary rounded me-4 me-sm-0'),
+                ICON.CHART_SIMPLE,
+            ], className='icon-shape icon-shape-primary rounded me-4 me-sm-0', style={'background-color': '#ECEEEB', 'color': '#464A4D'}),  # #91989E
             # html.Div([
             #     html.H2("Confidence Interval", className='h5'),
             #     html.H3("345,678", className='fw-extrabold mb-1')
             # ], className='d-sm-none')
-        ], className='col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center'),
+        ], className='col-12 col-xl-5 text-xl-center mb-0 mb-xl-0 d-flex align-items-center justify-content-xl-center'),
         html.Div([
             html.Div([
                 dcc.Store(id='shared-data'),
