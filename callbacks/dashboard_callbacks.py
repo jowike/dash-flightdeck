@@ -512,8 +512,9 @@ def register_callbacks(app, project_root):
         if not shared_data:
             raise PreventUpdate
 
+        shared_data["local_explanation"]
         local_explanation_data = shared_data["local_explanation"]
-        columns = [{"id": c, "name": c} for c in local_explanation_data[0].keys()]
+        columns = [{"id": c, "name": c} for c in ['Release Date', 'Data Series', 'Impact']]
 
         # Instantiate the PageVisitsTable with the updated data
         table = PageVisitsTable(

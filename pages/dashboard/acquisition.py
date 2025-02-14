@@ -11,7 +11,7 @@ def acquisition():
                 html.Div([
                     html.Div([
                         html.Div([
-                            ICON.FLAG
+                            ICON.TRIANGLE_EXCLAMATION
                        ], className='icon-shape icon-sm icon-shape-danger rounded me-3'),
                         html.Div([
                             html.Label("Average Error Rate", className='mb-0'),

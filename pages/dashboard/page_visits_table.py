@@ -42,7 +42,7 @@ class PageVisitsTable(TableAIO):
 def pageVisitsTable():
     table = PageVisitsTable(
         data=data,  # This will be populated dynamically via callback
-        columns=[{'id': c, 'name': c} for c in ['Release Date', 'Data Series', 'Impact', '']],
+        columns=[{'id': c, 'name': c} for c in ['Release Date', 'Data Series', 'Impact']],
         )
 
     return html.Div([

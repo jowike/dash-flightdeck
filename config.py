@@ -87,10 +87,10 @@ def load_contributions(
 
         # Prepare the ordered dictionary
 
-        df[''] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
+        df['Change'] = ['Up' if x > 0 else 'Down' if x < 0 else '' for x in df['Impact']]  # Adding 'Up' or 'Down' based on 'Impact'
         # df["Impact"] = df["Impact"].map(lambda x: f"{x:.2%}")
         
-        return df[['Release Date', "Data Series", "Impact", ""]].to_dict('records'), df["Series ID"].tolist()
+        return df[['Release Date', "Data Series", "Impact", "Change"]].to_dict('records'), df["Series ID"].tolist()
     return None
 
 
@@ -117,8 +117,9 @@ def load_series(series_id=None, diff=True):
     if diff:
         for c in colnames[1:]:
             df[c] = df[c].pct_change()
+    # df.loc[df[parameters['options']['ref_date_col']] == ref_datetime, y_code] = None
 
-    series = df.loc[df[ref_date_col].between(ref_datetime-relativedelta.relativedelta(months=6), ref_datetime), colnames]
+    series = df.loc[df[ref_date_col].between(ref_datetime-relativedelta.relativedelta(months=7), ref_datetime-relativedelta.relativedelta(months=1)), colnames]
     series["dt"] = pd.to_datetime(series[ref_date_col]).dt.strftime('%b')
 
     if series_id is None:
