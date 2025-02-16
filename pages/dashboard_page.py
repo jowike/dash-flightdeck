@@ -48,7 +48,7 @@ layout = html.Main(
                         html.Div(
                             [
                                 pageVisitsTable(),
-                                acquisition(),
+                                alertsNotifications(),  # acquisition(),
                             ],
                             className="row",
                         )
@@ -56,7 +56,10 @@ layout = html.Main(
                     className="col-12 col-xl-8",
                 ),
                 html.Div(
-                    [totalOrdersBarChart(), alertsNotifications()],
+                    [
+                        totalOrdersBarChart(),
+                        acquisition(),  # alertsNotifications()
+                        ],
                     className="col-12 col-xl-4",
                 ),
             ],

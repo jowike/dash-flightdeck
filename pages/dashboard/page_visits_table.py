@@ -57,6 +57,6 @@ def pageVisitsTable():
                     # ], className='col text-end')
                 ], className='row align-items-center')
             ], className='card-header'),
-            html.Div(table, className='table-responsive', id='local-explanation-table', style={'maxHeight': '420px', 'overflowY': 'auto'})
+            html.Div(table, className='table-responsive', id='local-explanation-table', style={'maxHeight': '480px', 'overflowY': 'auto'})
         ], className='card border-0 shadow')
     ], className='col-12 mb-4')

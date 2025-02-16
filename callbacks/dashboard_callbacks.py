@@ -60,14 +60,18 @@ def register_callbacks(app, project_root):
                 bootstrap_project(Path(project_root))
                 with KedroSession.create(Path(project_root)) as session:
                     session.run()
-                return html.Div(
-                    "Pipeline executed successfully!", style={"color": "green"}
-                )
+                return html.Div([
+                    html.Span(ICON.DIAMOND), html.Span("Nowcasting pipeline state: "),
+                    html.Span("Pipeline executed successfully!", style={"color": "green"})
+                ])
             except Exception as e:
-                return html.Div(
-                    f"Pipeline execution failed: {str(e)}", style={"color": "red"}
-                )
-        return html.Div()  # Empty div initially
+                return html.Div([
+                    html.Span(ICON.DIAMOND), html.Span("Nowcasting pipeline state: "),
+                    html.Span(f"Pipeline execution failed: {str(e)}", style={"color": "red"})
+                ])
+        return html.Div([
+            html.Span(ICON.DIAMOND), html.Span("Nowcasting pipeline state: "), html.Span(html.Span("Idle", style={"color": "#585858"}))
+            ])
 
     @app.callback(
         Output("pipeline-viz", "children"),
@@ -137,16 +141,18 @@ def register_callbacks(app, project_root):
                     return html.Div("✨ Kedro Viz has been stopped.")
                 except subprocess.TimeoutExpired:
                     return html.Div(
-                        "Failed to stop Kedro Viz: Timeout occurred.",
+                        "✨ Failed to stop Kedro Viz: Timeout occurred.",
                         style={"color": "red"},
                     )
                 except Exception as e:
                     return html.Div(
-                        f"Failed to stop Kedro Viz: {str(e)}", style={"color": "red"}
+                        f"✨ Failed to stop Kedro Viz: {str(e)}", style={"color": "red"}
                     )
 
         # Default output if no action is triggered
-        return html.Div("Click the buttons to start or stop Kedro Viz.")
+        return html.Div([
+            html.Span("✨ Kedro-Viz state: "), html.Span(html.Span("Idle", style={"color": "#585858"}))
+            ])
 
     # Callback to toggle the modal visibility
     @app.callback(
@@ -378,8 +384,8 @@ def register_callbacks(app, project_root):
             Output("nowcast-pred-change", "children"),
             Output("nowcast-annotation", "children"),
             Output("global-explanation-legend-gray", "children"),
-            Output("nowcast-as-of-date", "children"),
-            Output("data-as-of-date", "children"),
+            # Output("nowcast-as-of-date", "children"),
+            # Output("data-as-of-date", "children"),
         ],
         Input("shared-data", "data"),  # Get the data from the store
     )
@@ -405,8 +411,8 @@ def register_callbacks(app, project_root):
             ICON.GLOBE.ME1,
             shared_data["nowcast_header"]["Region"],
         ]
-        data_watermark = f'Data as of Date: {pd.to_datetime(shared_data["nowcast_header"]["Data as of"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
-        nowcast_watermark = f'Last Run Watermark: {pd.to_datetime(shared_data["nowcast_header"]["Last Run Watermark"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
+        # data_watermark = f'Data as of Date: {pd.to_datetime(shared_data["nowcast_header"]["Data as of"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
+        # nowcast_watermark = f'Last Run Watermark: {pd.to_datetime(shared_data["nowcast_header"]["Last Run Watermark"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
 
         return (
             shared_data["nowcast_series"],
@@ -415,6 +421,26 @@ def register_callbacks(app, project_root):
             change_children,
             annot_children,
             shared_data["nowcast_header"]["Series Code"],
+            # data_watermark,
+            # nowcast_watermark
+        )  # Return the transformed data
+
+   # Define a callback to update the data in the chart when the store data changes
+    @app.callback(
+        [
+            Output("data-as-of-date", "children"),
+            Output("nowcast-as-of-date", "children"),
+        ],
+        Input("shared-data", "data"),  # Get the data from the store
+    )
+    def update_watermarks(shared_data):
+        if shared_data is None:
+            raise PreventUpdate  # Do not update if no data
+
+        data_watermark = f'⏳ Data as of Date: {pd.to_datetime(shared_data["nowcast_header"]["Data as of"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
+        nowcast_watermark = f'⌛️ Last Run Watermark: {pd.to_datetime(shared_data["nowcast_header"]["Last Run Watermark"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
+
+        return (
             data_watermark,
             nowcast_watermark
         )  # Return the transformed data
