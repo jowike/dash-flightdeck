@@ -20,7 +20,7 @@ from ..icons.hero import ICON
 options = {
     # 'low': 0,
     'showArea': False,
-    'fullWidth': True,
+    'fullWidth': False,
     'axisX': {
         # On the x-axis start means top and end means bottom
         'position': 'end',
