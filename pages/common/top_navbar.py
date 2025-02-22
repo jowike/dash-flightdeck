@@ -40,7 +40,7 @@ def infoControl():
                                 ", bolstering informed decision making with timely, accurate nowcasts — available in  ",
                                 html.Strong("minutes, not weeks"), "."
                             ]),
-                        html.H6("Key assets", className="mt-4 fw-bold"),
+                        html.H6("🪄 Key assets", className="mt-4 fw-bold"),
                         html.Ul([
                             html.Li([
                                 html.B("Data"), 
@@ -63,15 +63,15 @@ def infoControl():
                                 " behind the predictions."
                             ])
                         ]),
-                        html.H4("Dashboard walkthrough"),
-                        html.H6("Nowcast Browser", className="fw-bold"),
+                        html.H5("Dashboard walkthrough"),
+                        html.H6("🔮 Nowcast Browser", className="fw-bold"),
                         html.P([
                             html.Strong("The Nowcast Browser"), 
                             " displays forecasts for the upcoming reporting period alongside backcasting results, comparing actual and predicted values. "
                             "It provides a clear visualization of real-time estimates against historical data, supporting data-driven decision-making."
                         ]),
 
-                        html.H6("Cards", className="fw-bold"),
+                        html.H6("🧮 Tiles", className="fw-bold"),
                         html.Ul([
                             html.Li([
                                 html.Strong("Prediction Uncertainty"), 
@@ -94,7 +94,7 @@ def infoControl():
                             ])
                         ]),
 
-                        html.H6("Local Explanation", className="fw-bold"),
+                        html.H6("🧩 Local Explanation", className="fw-bold"),
                         html.P([
                             html.Strong("The Local Explanation"), 
                             " table details the impact of each variable on the model’s predictions. "
@@ -104,7 +104,7 @@ def infoControl():
                             " for the latest reporting periods of the variables that drive predictions."
                         ]),
 
-                        html.H6("Global Explanation", className="fw-bold"),
+                        html.H6("📊 Global Explanation", className="fw-bold"),
                         html.P([
                             html.Strong("The Global Explanation"), 
                             " provides a broader view of how predicted indicators co-move with explanatory variables contributing to the forecast. ",
@@ -113,7 +113,7 @@ def infoControl():
                         ]),
                         html.P("Users can navigate through the contributing indicators and select specific variables of interest to analyze their influence on the forecast."),
 
-                        html.H6("Real-Time Monitoring Insights", className="fw-bold"),
+                        html.H6("⏰ Real-Time Monitoring Insights", className="fw-bold"),
                         html.P([
                             "This panel provides users with a clear view of ", 
                             html.Strong("data recency"), 
@@ -136,14 +136,14 @@ def infoControl():
                         ]),
                         html.P("This ensures transparency in data processing and enables users to track the progress of ongoing estimations."),
 
-                        html.H6("Model Assessment", className="fw-bold"),
+                        html.H6("⚠️ Model Assessment", className="fw-bold"),
                         html.P("Gives an overview of key evaluation metrics for predictive analytics, helping assess the accuracy and reliability of nowcasts."),
 
-                        html.H4("How to Use?", className="fw-bold"),
+                        html.H5("How to Use?", className="fw-bold"),
                         html.P("The top navigation pane streamlines the workflow, ensuring smooth data management and seamless execution of nowcasting models."),
 
                         html.P([
-                            "The ", html.Strong("Settings"), 
+                            "⚙️ ", html.Strong("Settings"), 
                             " dropdown menu provides key functionalities for managing data and pipeline configurations:"
                         ]),
 
@@ -168,12 +168,12 @@ def infoControl():
                         ]),
 
                         html.P([
-                            html.Strong("Kedro Run"), " standalone button triggers the nowcasting estimation process by executing the ", 
+                            html.Span(ICON.DIAMOND, className='me-1'), html.Strong("Kedro Run"), " standalone button triggers the nowcasting estimation process by executing the ", 
                             html.Strong("Kedro pipeline"), " (", html.Span("kedro run", style={"color": "green"}), ")."
                         ]),
 
                         html.P([
-                            html.Strong("Kedro Viz"), " button launches ", html.Strong("Kedro Viz"), ", which visualizes the pipeline structure, displaying ",
+                            html.Span("✨", className='me-1'), html.Strong("Kedro Viz"), " button launches ", html.Strong("Kedro Viz"), ", which visualizes the pipeline structure, displaying ",
                             html.Strong("data, nodes, and their connections"), " within the Kedro project."
                         ])
 
