@@ -22,8 +22,11 @@ def install_packages():
         "pip install -U kaleido",
         "pip install dash-uploader",
         "pip install dash-spa",
+        "pip install dash_chartist",
         "pip install xlsxwriter",
-        "pip install dash_loading_spinners"
+        "pip install openpyxl",
+        "pip install dash_loading_spinners",
+        "pip install diskcache",
     ]
     for cmd in commands:
         run_command(cmd)
