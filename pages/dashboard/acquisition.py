@@ -12,7 +12,8 @@ def acquisition():
                     html.Div([
                         html.Div([
                             ICON.TRIANGLE_EXCLAMATION
-                       ], className='icon-shape icon-sm icon-shape-danger rounded me-3'),
+                       ], className='icon-shape icon-sm icon-shape-danger rounded me-3',
+                        ),
                         html.Div([
                             html.Label("Average Error Rate", className='mb-0'),
                             html.H4("Not Available", className='mb-0', id='average-error-rate')
@@ -21,12 +22,38 @@ def acquisition():
                     html.Div([
                         html.Div([
                             ICON.FIRE.ME2
-                        ], className='icon-shape icon-sm icon-shape-purple rounded me-3'),
+                        ], className='icon-shape icon-sm icon-shape-secondary rounded me-3',
+                        style={'background-color': '#FBEAD6', 'color': '#FFC900'},  # F8BD7A
+                        # style={'background-color': '#ECEEEB', 'color': '#464A4D'}
+                        ),
                         html.Div([
                             html.Label("Adjusted R-Squared", className='mb-0'),
                             html.H4("Not Available", className='mb-0', id='adjusted-r-squared')
                         ], className='d-block')
+                    ], className='d-flex align-items-center pt-3'),
+                    html.H2("Underlying Estimates", className='fs-6 fw-bold mt-3'),
+                    html.Div([
+                        html.Div([
+                            ICON.GLOBE.ME0
+                        ], className='icon-shape icon-sm icon-shape-tertiary rounded me-3', style={'background-color': '#EAE2E3'}),
+                        html.Div([
+                            html.Label("Number of Indicators", className='mb-0'),
+                            html.H4("Not Available", className='mb-0', id='indicators-count')
+                        ], className='d-block')
+                    ], className='d-flex align-items-center'),
+                    html.Div([
+                        html.Div([
+                            ICON.HEXAGON
+                        ], className='icon-shape icon-sm icon-shape-purple rounded me-3'),
+                        html.Div([
+                            html.Label("Number of Models", className='mb-0'),
+                            html.H4("Not Available", className='mb-0', id='models-count')
+                        ], className='d-block')
                     ], className='d-flex align-items-center pt-3')
+
+
+
+
                 ], className='d-block')
             ], className='card-body')
         ], className='card border-0 shadow')

@@ -559,7 +559,12 @@ def register_callbacks(app, project_root):
 
     # Define a callback to update the data in the chart when the store data changes
     @app.callback(
-        [Output("average-error-rate", "children"), Output("adjusted-r-squared", "children")], Input("shared-data", "data")
+        [
+            Output("average-error-rate", "children"),
+            Output("adjusted-r-squared", "children"),
+            Output("indicators-count", "children"),
+            Output("models-count", "children")
+            ], Input("shared-data", "data")
     )
     def update_evaluation(shared_data):
         if not shared_data:
@@ -567,7 +572,12 @@ def register_callbacks(app, project_root):
 
         evaluation_measures = load_evaluation()
 
-        return "{:.2%}".format(evaluation_measures["Average Error Rate"]), "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%")
+        return (
+            "{:.2%}".format(evaluation_measures["Average Error Rate"]),
+            "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%"),
+            int(evaluation_measures["Processed Variables Count"]),
+            int(evaluation_measures["Model Estimations Count"])
+        )
     
     @app.callback(
         Output("dropdown-menu", "children"),
