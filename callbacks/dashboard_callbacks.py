@@ -538,7 +538,6 @@ def register_callbacks(app, project_root):
         if not shared_data:
             raise PreventUpdate
 
-        shared_data["local_explanation"]
         local_explanation_data = shared_data["local_explanation"]
         columns = [{"id": c, "name": c} for c in ['Release Date', 'Data Series', 'Impact']]
 
@@ -622,5 +621,7 @@ def register_callbacks(app, project_root):
         ]
 
         data = load_series(series_id=selected_option)
+
+        # print(data, "{:,.1f}".format(value).rstrip(".0"), children, selected_option)
 
         return data, "{:,.1f}".format(value).rstrip(".0"), children, selected_option
