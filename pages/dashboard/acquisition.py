@@ -35,7 +35,7 @@ def acquisition():
                     html.Div([
                         html.Div([
                             ICON.GLOBE.ME0
-                        ], className='icon-shape icon-sm icon-shape-tertiary rounded me-3', style={'background-color': '#EAE2E3'}),
+                        ], className='icon-shape icon-sm icon-shape-tertiary rounded me-3', style={'background-color': '#EAE2E3', 'color': '#50270C'}),
                         html.Div([
                             html.Label("Number of Indicators", className='mb-0'),
                             html.H4("Not Available", className='mb-0', id='indicators-count')
