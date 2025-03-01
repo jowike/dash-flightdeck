@@ -13,8 +13,8 @@ def acquisition():
                         html.Div([
                             ICON.TRIANGLE_EXCLAMATION
                        ], className='icon-shape icon-sm icon-shape-tertiary rounded me-3',
-                        style={'background-color': '#FFE2E6', 'color': '#A90F28'},  # D95050
-                        # style={'background-color': '#FFDBCC', 'color': '#800000'},  # D95050
+                        # style={'background-color': '#FFE2E6', 'color': '#A90F28'},
+                        style={'background-color': '#FFDBCC', 'color': '#800000'},
                         # style={'background-color': '#fff8c5', 'color': '#9e680a'},
                         ),
                         html.Div([
