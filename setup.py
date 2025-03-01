@@ -17,16 +17,17 @@ def install_packages():
         "pip install kedro-datasets",
         "pip install bottleneck",
         "pip install pmdarima",
-        "python3 /Users/ejowik001/Desktop/Github/mifs/setup.py install",  # TODO: git clone + git checkout
+        "python3 C:\\Users\\elzbi\\OneDrive\\Dokumenty\\GitHub\\mifs\\setup.py install --user",  # TODO: git clone + git checkout
         "pip install numpy==1.26.4",
         "pip install -U kaleido",
-        "pip install dash-uploader",
-        "pip install dash-spa",
-        "pip install dash_chartist",
         "pip install xlsxwriter",
         "pip install openpyxl",
-        "pip install dash_loading_spinners",
         "pip install diskcache",
+        "pip install pyyaml",
+        "pip install dash_uploader",
+        "pip install dash_spa",
+        "pip install dash_chartist",
+        "pip install dash_loading_spinners",
     ]
     for cmd in commands:
         run_command(cmd)

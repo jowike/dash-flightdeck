@@ -9,6 +9,7 @@ import os
 import subprocess
 import socket
 import signal
+import psutil
 import base64
 import pandas as pd
 from dash import (
@@ -36,6 +37,9 @@ from pages.icons.hero import ICON
 
 from dash_spa.components.table import SearchAIO, TableContext
 import dash_bootstrap_components as dbc
+
+import warnings
+warnings.filterwarnings('ignore')
 
 PageVisitsTable = TableContext.Provider(id="page_visits_table")(PageVisitsTable)
 
@@ -93,6 +97,17 @@ def register_callbacks(app, project_root):
                 except OSError:
                     port += 1
             raise IOError("no free ports")
+        
+        def __kill_process_tree(pid, include_parent=True):
+            try:
+                parent = psutil.Process(pid)
+            except psutil.NoSuchProcess:
+                return
+            children = parent.children(recursive=True)
+            for child in children:
+                child.kill()
+            if include_parent:
+                parent.kill()
 
         # Start Kedro Viz
         if start_clicks > 0:
@@ -104,7 +119,8 @@ def register_callbacks(app, project_root):
                     kedro_viz_process = subprocess.Popen(
                         f"cd {project_root} && kedro viz --autoreload --host=127.0.0.1 --port={viz_port}",
                         shell=True,
-                        preexec_fn=os.setsid,  # Create a new process group
+                        # preexec_fn=os.setsid,  # Create a new process group
+                        creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
                     )
                     return html.Div(
                         [
@@ -134,7 +150,8 @@ def register_callbacks(app, project_root):
             if kedro_viz_process:
                 try:
                     # Kill the entire process group
-                    os.killpg(os.getpgid(kedro_viz_process.pid), signal.SIGTERM)
+                    # os.killpg(os.getpgid(kedro_viz_process.pid), signal.SIGTERM)
+                    __kill_process_tree(kedro_viz_process.pid)
                     kedro_viz_process.wait(timeout=5)  # Ensure the process terminates
                     kedro_viz_process = None  # Reset the process variable
                     viz_port = None  # Reset the port variable
@@ -437,8 +454,8 @@ def register_callbacks(app, project_root):
         if shared_data is None:
             raise PreventUpdate  # Do not update if no data
 
-        data_watermark = f'⏳ Data as of Date: {pd.to_datetime(shared_data["nowcast_header"]["Data as of"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
-        nowcast_watermark = f'⌛️ Last Run Watermark: {pd.to_datetime(shared_data["nowcast_header"]["Last Run Watermark"]).strftime("%-m/%-d/%Y %-I:%M %p CET")}'
+        data_watermark = f'⏳ Data as of Date: {pd.to_datetime(shared_data["nowcast_header"]["Data as of"]).strftime("%#m/%#d/%Y %#I:%M %p CET")}'
+        nowcast_watermark = f'⌛️ Last Run Watermark: {pd.to_datetime(shared_data["nowcast_header"]["Last Run Watermark"]).strftime("%#m/%#d/%Y %#I:%M %p CET")}'
 
         return (
             data_watermark,
@@ -538,7 +555,6 @@ def register_callbacks(app, project_root):
         if not shared_data:
             raise PreventUpdate
 
-        shared_data["local_explanation"]
         local_explanation_data = shared_data["local_explanation"]
         columns = [{"id": c, "name": c} for c in ['Release Date', 'Data Series', 'Impact']]
 
@@ -560,7 +576,12 @@ def register_callbacks(app, project_root):
 
     # Define a callback to update the data in the chart when the store data changes
     @app.callback(
-        [Output("average-error-rate", "children"), Output("adjusted-r-squared", "children")], Input("shared-data", "data")
+        [
+            Output("average-error-rate", "children"),
+            Output("adjusted-r-squared", "children"),
+            Output("indicators-count", "children"),
+            Output("models-count", "children")
+            ], Input("shared-data", "data")
     )
     def update_evaluation(shared_data):
         if not shared_data:
@@ -568,7 +589,12 @@ def register_callbacks(app, project_root):
 
         evaluation_measures = load_evaluation()
 
-        return "{:.2%}".format(evaluation_measures["Average Error Rate"]), "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%")
+        return (
+            "{:.2%}".format(evaluation_measures["Average Error Rate"]),
+            "{:.2%}".format(evaluation_measures["Adjusted R-Squared"]).replace(".0%", "%"),
+            int(evaluation_measures["Processed Variables Count"]),
+            int(evaluation_measures["Model Estimations Count"])
+        )
     
     @app.callback(
         Output("dropdown-menu", "children"),
@@ -622,5 +648,7 @@ def register_callbacks(app, project_root):
         ]
 
         data = load_series(series_id=selected_option)
+
+        # print(data, "{:,.1f}".format(value).rstrip(".0"), children, selected_option)
 
         return data, "{:,.1f}".format(value).rstrip(".0"), children, selected_option

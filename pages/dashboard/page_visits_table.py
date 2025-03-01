@@ -28,13 +28,14 @@ class PageVisitsTable(TableAIO):
         return  html.Tr([
             html.Th(name, className='text-gray-900', scope='row'),
             html.Td(views, className='text-gray-900'),
+            html.Td(icon, className='text-gray-900', style={'textAlign': 'center', 'verticalAlign': 'middle'}),
             # html.Td(value, className='fw-bolder text-gray-500'),
-            html.Td([
-                html.Div([
-                    icon,
-                    rate
-                ], className='d-flex')
-            ], className='text-gray-900')
+            # html.Td([
+            #     html.Div([
+            #         icon,
+            #         rate
+            #     ], className='d-flex')
+            # ], className='text-gray-900')
         ])
 
 

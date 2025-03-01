@@ -5,7 +5,7 @@ from server import serve_app
 from callbacks.dashboard_callbacks import register_callbacks  # Import the callback registry function
 import os
 import sys
-sys.path.append("/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery/dependencies/")
+sys.path.append("C:\\Users\\elzbi\\OneDrive\\Dokumenty\\GitHub\\Nowcasting\\kedro\\refinery\\dependencies\\")
 
 external_stylesheets = [
     "https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css",
@@ -45,5 +45,5 @@ def create_app(dash_factory, project_root) -> DashSPA:
 
 # python app.py
 if __name__ == "__main__":
-    app = create_app(create_dash, project_root="/Users/ejowik001/Desktop/Github/Nowcasting/kedro/refinery")
+    app = create_app(create_dash, project_root="C:\\Users\\elzbi\\OneDrive\\Dokumenty\\GitHub\\Nowcasting\\kedro\\refinery\\")
     serve_app(app, debug=False, path="/pages/dashboard")
