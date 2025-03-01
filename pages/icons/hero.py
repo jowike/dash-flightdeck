@@ -247,6 +247,10 @@ class ICON:
             Path(strokeLinecap='round', strokeLinejoin='round', d='M284.3 11.7c-15.6-15.6-40.9-15.6-56.6 0l-216 216c-15.6 15.6-15.6 40.9 0 56.6l216 216c15.6 15.6 40.9 15.6 56.6 0l216-216c15.6-15.6 15.6-40.9 0-56.6l-216-216z')
         ], className='icon icon-xs me-1', fill='#FFC900', stroke='white', viewBox='0 0 512 512', xmlns='http://www.w3.org/2000/svg', style={'width': '14px', 'height': '14px'})
 
+    DATABASE = Svg([
+            Path(strokeLinecap='round', strokeLinejoin='round', d='M448 80l0 48c0 44.2-100.3 80-224 80S0 172.2 0 128L0 80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6L448 288c0 44.2-100.3 80-224 80S0 332.2 0 288L0 186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6l0 85.9c0 44.2-100.3 80-224 80S0 476.2 0 432l0-85.9z')
+        ], className='icon icon-xs', fill='currentColor', stroke='currentColor', viewBox='0 0 448 512', xmlns='http://www.w3.org/2000/svg', style={'width': '20px', 'height': '20px'})
+
     TICK = Svg([
             Path(fillRule='evenodd', d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z', clipRule='evenodd')
         ], className='icon icon-xxs ms-auto', fill='currentColor', viewBox='0 0 20 20', xmlns='http://www.w3.org/2000/svg')
