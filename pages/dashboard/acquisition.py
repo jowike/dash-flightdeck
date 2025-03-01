@@ -14,6 +14,7 @@ def acquisition():
                             ICON.TRIANGLE_EXCLAMATION
                        ], className='icon-shape icon-sm icon-shape-tertiary rounded me-3',
                         style={'background-color': '#FFDBCC', 'color': '#D95050'},
+                        # style={'background-color': '#fff8c5', 'color': '#9e680a'},
                         ),
                         html.Div([
                             html.Label("Average Error Rate", className='mb-0'),
